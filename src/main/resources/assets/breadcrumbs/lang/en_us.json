@@ -1,0 +1,17 @@
+{
+  "key.breadcrumbs.category": "Breadcrumbs",
+  "key.breadcrumbs.toggle": "Toggle Breadcrumbs",
+  "config.breadcrumbs.title": "Breadcrumbs Configuration",
+  "config.breadcrumbs.category.general": "General",
+  "config.breadcrumbs.render_through_walls": "Render through walls",
+  "config.breadcrumbs.segment_distance": "Segment distance",
+  "config.breadcrumbs.smooth_interpolation": "Smooth interpolation",
+  "config.breadcrumbs.interpolation_steps": "Interpolation steps",
+  "config.breadcrumbs.trail_mode": "Trail mode",
+  "config.breadcrumbs.trail_thickness": "Trail thickness",
+  "config.breadcrumbs.trail_opacity": "Trail opacity",
+  "config.breadcrumbs.render_arrows": "Render arrows",
+  "config.breadcrumbs.backwards_arrows": "Backwards arrows",
+  "config.breadcrumbs.arrow_size": "Arrow size",
+  "config.breadcrumbs.arrow_frequency": "Arrow frequency"
+}
