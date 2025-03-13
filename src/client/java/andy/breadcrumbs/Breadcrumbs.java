@@ -30,9 +30,6 @@ import java.util.List;
 public class Breadcrumbs implements ClientModInitializer {
     private static boolean enabled = false;
     private static List<Vector3f> positions = new ArrayList<>();
-    private static List<Pair<Vector3f, Vector3f>> cachedSegments = new ArrayList<>();
-    private static CacheState cacheState = CacheState.INVALID;
-    private static int cachedPositions = 0;
     private static KeyBinding keyBinding = KeyBindingHelper.registerKeyBinding(
             new KeyBinding(
                     "key.breadcrumbs.toggle",
@@ -52,7 +49,6 @@ public class Breadcrumbs implements ClientModInitializer {
                 enabled = !enabled;
                 if (enabled) {
                     positions.clear();
-                    cacheState = CacheState.INVALID;
                 }
                 client.player.sendMessage(Text.literal("Recording: " + enabled));
             }
@@ -63,12 +59,6 @@ public class Breadcrumbs implements ClientModInitializer {
                 return;
 
             ClientPlayerEntity player = MinecraftClient.getInstance().player;
-            ArrayList<Vector3f> test = new ArrayList<>();
-            test.add(new Vector3f(0, 0, 0));
-            test.add(new Vector3f(1, 2, 3));
-            test.add(new Vector3f(2, 1, 1));
-            List<Vector3f> interpolated = CatmullRomSpline.interpolate(test, 2);
-            player.sendMessage(Text.literal("Interpolated: " + interpolated.size()));
             if (MinecraftClient.getInstance().isPaused())
                 return;
             if (player == null) {
@@ -80,37 +70,17 @@ public class Breadcrumbs implements ClientModInitializer {
 
             if (positions.size() < 2) {
                 positions.add(playerPos);
-
-                cacheState = CacheState.NEEDS_UPDATE;
                 return;
             }
             var pos1 = positions.get(positions.size() - 1);
             var pos2 = positions.get(positions.size() - 2);
             if (pos1.distance(pos2) < Breadcrumbs.settings.segmentDistance) {
-                for (int i = 0; i < settings.interpolationSteps; i++) {
-                    positions.removeLast();
-                }
+                positions.remove(pos1);
                 positions.add(playerPos);
-
-
-                if (settings.smoothInterpolation) {
-                    if (positions.size() > 3) {
-                        positions = CatmullRomSpline.interpolateLastOf(positions, settings.interpolationSteps);
-                    } else if (positions.size() > 2) {
-                        positions = CatmullRomSpline.interpolate(positions, settings.interpolationSteps);
-                    }
-                }
                 return;
             }
 
             positions.add(playerPos);
-            if (positions.size() > 3) {
-                positions = CatmullRomSpline.interpolateLastOf(positions, settings.interpolationSteps);
-            } else if (positions.size() > 2) {
-                positions = CatmullRomSpline.interpolate(positions, settings.interpolationSteps);
-            }
-
-            cacheState = CacheState.NEEDS_UPDATE;
         });
 
         WorldRenderEvents.LAST.register((context) -> {
@@ -127,7 +97,10 @@ public class Breadcrumbs implements ClientModInitializer {
             float cz = (float) cameraPos.z;
 
             List<Vector3f> points;
-            points = positions;
+            if (settings.smoothInterpolation)
+                points = CatmullRomSpline.interpolate(positions, settings.interpolationSteps);
+            else
+                points = positions;
 
             int size = points.size();
             float saturation = 1f;
@@ -144,6 +117,7 @@ public class Breadcrumbs implements ClientModInitializer {
                     buf = tessellator.begin(VertexFormat.DrawMode.DEBUG_LINE_STRIP, VertexFormats.POSITION_COLOR);
 
                 GL11.glEnable(GL11.GL_LINE_SMOOTH);
+                GL11.glLineWidth(5f);
 
                 for (int i = 0; i < size - (arrows ? 1 : 0); i++) {
                     float hue = ((float) i / Math.max(size, 30)) * 0.5f;
@@ -156,7 +130,9 @@ public class Breadcrumbs implements ClientModInitializer {
                         Vector3f pos2 = points.get(i + 1);
                         buf.vertex(matrix, pos2.x - cx, pos2.y - cy, pos2.z - cz).color(color[0], color[1], color[2], Breadcrumbs.settings.trailOpacity);
 
-                        if (i == size - 2 || ((i / settings.interpolationSteps) % settings.arrowFrequency == 0 && i % settings.interpolationSteps == 0)) {
+                        if (i == size - 2 ||
+                                (settings.smoothInterpolation && ((i / settings.interpolationSteps) % settings.arrowFrequency == 0 && i % settings.interpolationSteps == 0)) ||
+                                (!settings.smoothInterpolation && (i % settings.arrowFrequency == 0))) {
                             //Calculate the pitch and yaw of the current line segment
                             Vector3f dir = new Vector3f(pos2).sub(pos1).normalize();
                             float pitch = (float) Math.asin(-dir.y);

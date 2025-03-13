@@ -31,7 +31,7 @@ public class ModMenu implements ModMenuApi {
             .addEntry(entryBuilder.startBooleanToggle(Text.translatable("config.breadcrumbs.render_arrows"), settings.renderArrows).setDefaultValue(true).setSaveConsumer(v -> settings.renderArrows = v).build())
             .addEntry(entryBuilder.startBooleanToggle(Text.translatable("config.breadcrumbs.backwards_arrows"), settings.backwardsArrows).setDefaultValue(false).setSaveConsumer(v -> settings.backwardsArrows = v).build())
             .addEntry(entryBuilder.startFloatSlider(Text.translatable("config.breadcrumbs.arrow_size"), settings.arrowSize, 0.1f, 3f).setDefaultValue(0.2f).setSaveConsumer(v -> settings.arrowSize = v / 100f).build())
-            .addEntry(entryBuilder.startIntSlider(Text.translatable("config.breadcrumbs.arrow_frequency"), settings.arrowFrequency, 2, 20).setDefaultValue(5).setSaveConsumer(v -> settings.arrowFrequency = v).build());
+            .addEntry(entryBuilder.startIntSlider(Text.translatable("config.breadcrumbs.arrow_frequency"), settings.arrowFrequency, 1, 50).setDefaultValue(5).setSaveConsumer(v -> settings.arrowFrequency = v).build());
 
             builder.setSavingRunnable(() -> AutoConfig.getConfigHolder(Settings.class).save());
             return builder.build();

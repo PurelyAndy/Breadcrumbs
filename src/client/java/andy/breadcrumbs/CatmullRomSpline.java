@@ -8,33 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CatmullRomSpline {
-    public static List<Vector3f> interpolateLastOf(List<Vector3f> positions, int segments) {
-        int size = positions.size();
-        List<Vector3f> result = new ArrayList<>(size + segments - 1);
-        if (positions.isEmpty()) {
-            return result;
-        }
-        for (int i = 0; i < size - 1; i++) {
-            result.add(positions.get(i));
-        }
-        List<Vector3f> interpolated = interpolate(List.of(new Vector3f[] {
-                        positions.get(size - 2 - segments),
-                        positions.get(size - 2),
-                        positions.get(size - 1)
-                }), segments);
-
-        for (int i = 1; i < interpolated.size(); i++) {
-            result.add(interpolated.get(i));
-        }
-        return result;
-    }
     public static List<Vector3f> interpolate(List<Vector3f> positions, int segments) {
         int size = positions.size();
-        List<Vector3f> result = new ArrayList<>((size - 1) * segments + 1);
-
         if (positions.isEmpty()) {
-            return result;
+            return new ArrayList<>(0);
         }
+        List<Vector3f> result = new ArrayList<>((size - 1) * segments + 1);
 
         result.add(new Vector3f(positions.get(0)));
 
@@ -42,7 +21,7 @@ public class CatmullRomSpline {
             return result;
         }
 
-        for (int i = 0; i < size - 1; i++) {
+        for (int i = 0; i < size - 2; i++) {
             Vector3f p0 = i > 0 ? positions.get(i - 1) : positions.get(0);
             Vector3f p1 = positions.get(i);
             Vector3f p2 = positions.get(i + 1);

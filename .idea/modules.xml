@@ -5,6 +5,9 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Breadcrumbs.client.iml" filepath="$PROJECT_DIR$/.idea/modules/Breadcrumbs.client.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Breadcrumbs.main.iml" filepath="$PROJECT_DIR$/.idea/modules/Breadcrumbs.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Breadcrumbs.test.iml" filepath="$PROJECT_DIR$/.idea/modules/Breadcrumbs.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/andy.breadcrumbs.Breadcrumbs.client.iml" filepath="$PROJECT_DIR$/.idea/modules/andy.breadcrumbs.Breadcrumbs.client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/andy.breadcrumbs.Breadcrumbs.main.iml" filepath="$PROJECT_DIR$/.idea/modules/andy.breadcrumbs.Breadcrumbs.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/andy.breadcrumbs.Breadcrumbs.test.iml" filepath="$PROJECT_DIR$/.idea/modules/andy.breadcrumbs.Breadcrumbs.test.iml" />
     </modules>
   </component>
 </project>
