@@ -48,7 +48,7 @@ public class Breadcrumbs implements ClientModInitializer {
             while (keyBinding.wasPressed()) {
                 enabled = !enabled;
                 if (enabled) {
-                    positions.clear();
+                    positions.clear(); // Only reset when starting a new recording, not when stopping
                 }
                 client.player.sendMessage(Text.literal("Recording: " + enabled));
             }
@@ -68,7 +68,30 @@ public class Breadcrumbs implements ClientModInitializer {
 
             Vector3f playerPos = player.getLerpedPos(MinecraftClient.getInstance().getRenderTickCounter().getTickDelta(false)).toVector3f();
 
-            if (positions.size() < 2) {
+            if (settings.removeLoops) {
+                if (positions.size() > 3) { // It's impossible to have a loop with less than 3 line segments (4 points)
+                    float loopThreshold = 1.0f;
+                    int closePointIndex = -1;
+
+                    // Check if player is near any previous point (skip the last few points)
+                    for (int i = 0; i < positions.size() - 3; i++) {
+                        if (playerPos.distance(positions.get(i)) < loopThreshold) {
+                            closePointIndex = i;
+                            break;
+                        }
+                    }
+
+                    // If the player is close to a previous point, we have a loop
+                    if (closePointIndex >= 0) {
+                        // Remove all points between the found point and the end
+                        while (positions.size() > closePointIndex + 1) {
+                            positions.remove(positions.size() - 1);
+                        }
+                    }
+                }
+            }
+
+            if (positions.size() < 2) { // We need at least 2 points to calculate the distance
                 positions.add(playerPos);
                 return;
             }
@@ -113,32 +136,35 @@ public class Breadcrumbs implements ClientModInitializer {
                 boolean arrows = settings.renderArrows;
                 if (arrows)
                     buf = tessellator.begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
-                else
+                else // Optimization: using DEBUG_LINE_STRIP instead of DEBUG_LINES to reduce the number of vertices
                     buf = tessellator.begin(VertexFormat.DrawMode.DEBUG_LINE_STRIP, VertexFormats.POSITION_COLOR);
 
-                GL11.glEnable(GL11.GL_LINE_SMOOTH);
+                GL11.glEnable(GL11.GL_LINE_SMOOTH); // Doesn't work?
                 GL11.glLineWidth(5f);
 
                 for (int i = 0; i < size - (arrows ? 1 : 0); i++) {
+                    // The gradient looks silly with less than 30 points, and we only want to go from red to blue, not further
                     float hue = ((float) i / Math.max(size, 30)) * 0.5f;
                     float[] color = new Color(Color.HSBtoRGB(hue, saturation, brightness)).getRGBComponents(null);
 
                     Vector3f pos1 = points.get(i);
 
+                    // The first point of the segment
                     buf.vertex(matrix, pos1.x - cx, pos1.y - cy, pos1.z - cz).color(color[0], color[1], color[2], Breadcrumbs.settings.trailOpacity);
                     if (arrows) {
+                        // We have to draw the second point of the segment since this isn't a line strip
                         Vector3f pos2 = points.get(i + 1);
                         buf.vertex(matrix, pos2.x - cx, pos2.y - cy, pos2.z - cz).color(color[0], color[1], color[2], Breadcrumbs.settings.trailOpacity);
 
                         if (i == size - 2 ||
                                 (settings.smoothInterpolation && ((i / settings.interpolationSteps) % settings.arrowFrequency == 0 && i % settings.interpolationSteps == 0)) ||
                                 (!settings.smoothInterpolation && (i % settings.arrowFrequency == 0))) {
-                            //Calculate the pitch and yaw of the current line segment
+                            // Calculate the pitch and yaw of the current line segment
                             Vector3f dir = new Vector3f(pos2).sub(pos1).normalize();
                             float pitch = (float) Math.asin(-dir.y);
                             float yaw = (float) Math.atan2(dir.x, dir.z);
 
-                            //Calculate the rotation matrix
+                            // Calculate the rotation matrix
                             Matrix3f rotation = new Matrix3f();
                             rotation.rotateYXZ(yaw, pitch, 0);
 
@@ -146,7 +172,7 @@ public class Breadcrumbs implements ClientModInitializer {
                                 rotation.rotateY((float) Math.PI);
                             }
 
-                            //Calculate the arrow points
+                            // Calculate positions for the ends of the arrowhead
                             Vector3f arrowLeft = new Vector3f(-settings.arrowSize, 0, -2 * settings.arrowSize).mul(rotation).add(pos2);
                             Vector3f arrowRight = new Vector3f(settings.arrowSize, 0, -2 * settings.arrowSize).mul(rotation).add(pos2);
 
@@ -160,13 +186,14 @@ public class Breadcrumbs implements ClientModInitializer {
                 }
 
                 GL11.glDisable(GL11.GL_LINE_SMOOTH);
-                if (size - (arrows ? 1 : 0) > 0 ) {
+                if (size - (arrows ? 1 : 0) > 0 ) { // This will crash if there are no points
                     BufferRenderer.drawWithGlobalProgram(buf.end());
                 }
             } else if (settings.trailMode == TrailMode.THICK) {
                 buf = tessellator.begin(VertexFormat.DrawMode.TRIANGLE_STRIP, VertexFormats.POSITION_COLOR);
 
                 for (int i = 0; i < size - 1; i++) {
+                    // The gradient looks silly with less than 30 points, and we only want to go from red to blue, not further
                     float hue = ((float) i / Math.max(size, 30)) * 0.5f;
                     float[] color = new Color(Color.HSBtoRGB(hue, saturation, brightness)).getRGBComponents(null);
 
@@ -178,11 +205,12 @@ public class Breadcrumbs implements ClientModInitializer {
 
                     float thickness;
                     if (settings.renderArrows) {
-                        int arrowFrequency = settings.arrowFrequency * settings.interpolationSteps;
+                        int arrowFrequency = settings.arrowFrequency; // An arrow frequency of 1 with no interpolation would result in no arrows at all
+                        arrowFrequency *= settings.smoothInterpolation ? settings.interpolationSteps : 1;
                         if (settings.backwardsArrows) {
-                            thickness = (settings.arrowSize + settings.trailThickness) * (i % arrowFrequency) / arrowFrequency;
+                            thickness = (settings.arrowSize + settings.trailThickness) * (i % arrowFrequency) / (arrowFrequency + 1);
                         } else {
-                            thickness = (settings.arrowSize + settings.trailThickness) * (arrowFrequency - i % arrowFrequency) / arrowFrequency;
+                            thickness = (settings.arrowSize + settings.trailThickness) * (arrowFrequency - i % arrowFrequency) / (arrowFrequency + 1);
                         }
                     } else {
                         thickness = settings.trailThickness;
@@ -192,6 +220,14 @@ public class Breadcrumbs implements ClientModInitializer {
 
                     buf.vertex(matrix, p1.x - cx, p1.y - cy, p1.z - cz).color(color[0], color[1], color[2], settings.trailOpacity);
                     buf.vertex(matrix, p2.x - cx, p2.y - cy, p2.z - cz).color(color[0], color[1], color[2], settings.trailOpacity);
+
+                    if (i % (settings.arrowFrequency) == settings.arrowFrequency - 1) {
+                        // At the tip/thinnest point of the arrow, put 2 more points to make the base of the next arrow
+                        p1 = new Vector3f((float) Math.sin(a0), 0, (float) Math.cos(a0)).mul(settings.arrowSize + settings.trailThickness).add(pos2);
+                        p2 = new Vector3f((float) Math.sin(a1), 0, (float) Math.cos(a1)).mul(settings.arrowSize + settings.trailThickness).add(pos2);
+                        buf.vertex(matrix, p1.x - cx, p1.y - cy, p1.z - cz).color(color[0], color[1], color[2], settings.trailOpacity);
+                        buf.vertex(matrix, p2.x - cx, p2.y - cy, p2.z - cz).color(color[0], color[1], color[2], settings.trailOpacity);
+                    }
                 }
 
                 if (size - 1 > 0) {

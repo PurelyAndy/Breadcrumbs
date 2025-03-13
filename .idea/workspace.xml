@@ -5,14 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7116838f-9720-40c9-b067-cb4b5e009cff" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations/Minecraft_Client.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/runConfigurations/Minecraft_Client.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations/Minecraft_Server.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/runConfigurations/Minecraft_Server.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/client/java/andy/breadcrumbs/Breadcrumbs.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/client/java/andy/breadcrumbs/Breadcrumbs.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/client/java/andy/breadcrumbs/CatmullRomSpline.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/client/java/andy/breadcrumbs/CatmullRomSpline.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/client/java/andy/breadcrumbs/config/ModMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/client/java/andy/breadcrumbs/config/ModMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/client/java/andy/breadcrumbs/config/Settings.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/client/java/andy/breadcrumbs/config/Settings.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/breadcrumbs/lang/en_us.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/breadcrumbs/lang/en_us.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

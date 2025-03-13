@@ -13,5 +13,6 @@
   "config.breadcrumbs.render_arrows": "Render arrows",
   "config.breadcrumbs.backwards_arrows": "Backwards arrows",
   "config.breadcrumbs.arrow_size": "Arrow size",
-  "config.breadcrumbs.arrow_frequency": "Arrow frequency"
+  "config.breadcrumbs.arrow_frequency": "Arrow frequency",
+  "config.breadcrumbs.remove_loops": "Remove loops"
 }
