@@ -4,7 +4,7 @@
   "config.breadcrumbs.title": "Breadcrumbs Configuration",
   "config.breadcrumbs.category.general": "General",
   "config.breadcrumbs.render_through_walls": "Render through walls",
-  "config.breadcrumbs.segment_distance": "Segment distance",
+  "config.breadcrumbs.segment_length": "Segment length",
   "config.breadcrumbs.smooth_interpolation": "Smooth interpolation",
   "config.breadcrumbs.interpolation_steps": "Interpolation steps",
   "config.breadcrumbs.trail_mode": "Trail mode",

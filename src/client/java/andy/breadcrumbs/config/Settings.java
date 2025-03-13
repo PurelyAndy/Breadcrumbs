@@ -9,7 +9,7 @@ import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
 @Config(name = "breadcrumbs")
 public class Settings implements ConfigData {
     public boolean renderThroughWalls = true;
-    public float segmentDistance = 0.25f;
+    public float segmentLength = 0.25f;
     public boolean smoothInterpolation = true;
     public int interpolationSteps = 7;
     public TrailMode trailMode = TrailMode.LINES;

@@ -19,7 +19,7 @@ public class ModMenu implements ModMenuApi {
             //is it just me or is this absolutely terrible?
             builder.getOrCreateCategory(Text.translatable("config.breadcrumbs.category.general"))
             .addEntry(entryBuilder.startBooleanToggle(Text.translatable("config.breadcrumbs.render_through_walls"), settings.renderThroughWalls).setDefaultValue(true).setSaveConsumer(v -> settings.renderThroughWalls = v).build())
-            .addEntry(entryBuilder.startFloatSlider(Text.translatable("config.breadcrumbs.segment_distance"), settings.segmentDistance, 0f, 25f).setDefaultValue(0.25f).setSaveConsumer(v -> settings.segmentDistance = v / 100f).build())
+            .addEntry(entryBuilder.startFloatSlider(Text.translatable("config.breadcrumbs.segment_length"), settings.segmentLength, 0f, 25f).setDefaultValue(1f).setSaveConsumer(v -> settings.segmentLength = v / 100f).build())
             .addEntry(entryBuilder.startBooleanToggle(Text.translatable("config.breadcrumbs.smooth_interpolation"), settings.smoothInterpolation).setDefaultValue(true).setSaveConsumer(v -> settings.smoothInterpolation = v).build())
             .addEntry(entryBuilder.startIntSlider(Text.translatable("config.breadcrumbs.interpolation_steps"), settings.interpolationSteps, 1, 100).setDefaultValue(7).setSaveConsumer(v -> settings.interpolationSteps = v).build())
             .addEntry(entryBuilder.startEnumSelector(Text.translatable("config.breadcrumbs.trail_mode"), TrailMode.class, settings.trailMode).setDefaultValue(TrailMode.LINES).setSaveConsumer(v -> settings.trailMode = v).build())

@@ -14,7 +14,7 @@ classes/
 *.iml
 *.ipr
 *.iws
-workspace.xml
+.idea/workspace.xml
 
 # vscode
 

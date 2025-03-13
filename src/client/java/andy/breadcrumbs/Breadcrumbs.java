@@ -14,10 +14,8 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
-import net.minecraft.util.Pair;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Matrix3f;
-import org.joml.Matrix3fc;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
@@ -66,15 +64,17 @@ public class Breadcrumbs implements ClientModInitializer {
                 return;
             }
 
-            Vector3f playerPos = player.getLerpedPos(MinecraftClient.getInstance().getRenderTickCounter().getTickDelta(false)).toVector3f();
+            Vector3f playerPos = player
+                    .getLerpedPos(MinecraftClient.getInstance().getRenderTickCounter().getTickDelta(false))
+                    .toVector3f().add(0, 0.05f, 0); // Add 0.05f to avoid z-fighting with the ground
 
             if (settings.removeLoops) {
                 if (positions.size() > 3) { // It's impossible to have a loop with less than 3 line segments (4 points)
-                    float loopThreshold = 1.0f;
+                    float loopThreshold = 1f;
                     int closePointIndex = -1;
 
                     // Check if player is near any previous point (skip the last few points)
-                    for (int i = 0; i < positions.size() - 3; i++) {
+                    for (int i = 0; i < positions.size() - Math.ceil(Math.max(1, 1f/settings.segmentLength)) * 3; i++) {
                         if (playerPos.distance(positions.get(i)) < loopThreshold) {
                             closePointIndex = i;
                             break;
@@ -95,9 +95,10 @@ public class Breadcrumbs implements ClientModInitializer {
                 positions.add(playerPos);
                 return;
             }
+
             var pos1 = positions.get(positions.size() - 1);
             var pos2 = positions.get(positions.size() - 2);
-            if (pos1.distance(pos2) < Breadcrumbs.settings.segmentDistance) {
+            if (pos1.distance(pos2) < Breadcrumbs.settings.segmentLength) {
                 positions.remove(pos1);
                 positions.add(playerPos);
                 return;
@@ -110,6 +111,8 @@ public class Breadcrumbs implements ClientModInitializer {
             Matrix4f matrix = context.matrixStack().peek().getPositionMatrix();
             if (settings.renderThroughWalls) {
                 RenderSystem.disableDepthTest();
+            } else {
+                RenderSystem.enableDepthTest();
             }
             Tessellator tessellator = Tessellator.getInstance();
             BufferBuilder buf;
@@ -140,7 +143,6 @@ public class Breadcrumbs implements ClientModInitializer {
                     buf = tessellator.begin(VertexFormat.DrawMode.DEBUG_LINE_STRIP, VertexFormats.POSITION_COLOR);
 
                 GL11.glEnable(GL11.GL_LINE_SMOOTH); // Doesn't work?
-                GL11.glLineWidth(5f);
 
                 for (int i = 0; i < size - (arrows ? 1 : 0); i++) {
                     // The gradient looks silly with less than 30 points, and we only want to go from red to blue, not further
@@ -236,9 +238,7 @@ public class Breadcrumbs implements ClientModInitializer {
             }
             RenderSystem.disableBlend();
             GL11.glEnable(GL11.GL_CULL_FACE);
-            if (settings.renderThroughWalls) {
-                RenderSystem.enableDepthTest();
-            }
+            RenderSystem.enableDepthTest();
         });
     }
 
