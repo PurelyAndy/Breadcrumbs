@@ -21,7 +21,11 @@ public class CatmullRomSpline {
             return result;
         }
 
-        for (int i = 0; i < size - 2; i++) {
+        int offset = 1;
+        if (positions.get(positions.size() - 1).distance(positions.get(positions.size() - 2)) < 0.22) {
+            offset = 2;
+        }
+        for (int i = 0; i < size - offset; i++) {
             Vector3f p0 = i > 0 ? positions.get(i - 1) : positions.get(0);
             Vector3f p1 = positions.get(i);
             Vector3f p2 = positions.get(i + 1);

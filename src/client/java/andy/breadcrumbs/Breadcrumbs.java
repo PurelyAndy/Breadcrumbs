@@ -2,13 +2,18 @@ package andy.breadcrumbs;
 
 import andy.breadcrumbs.config.Settings;
 import andy.breadcrumbs.config.TrailMode;
+import com.mojang.blaze3d.systems.GpuDevice;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.ShaderProgram;
+//? if <=1.21.4 && >1.21.1
+/*import net.minecraft.client.gl.ShaderProgramKeys;*/
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.*;
@@ -51,7 +56,7 @@ public class Breadcrumbs implements ClientModInitializer {
                 if (enabled) {
                     positions.clear(); // Only reset when starting a new recording, not when stopping
                 }
-                client.player.sendMessage(Text.literal("Recording: " + enabled));
+                client.player.sendMessage(Text.literal("Recording: " + enabled), false);
             }
         });
 
@@ -68,8 +73,13 @@ public class Breadcrumbs implements ClientModInitializer {
             }
 
             Vector3f playerPos = player
-                    .getLerpedPos(MinecraftClient.getInstance().getRenderTickCounter().getTickDelta(false))
-                    .toVector3f().add(0, 0.05f, 0); // Add 0.05f to avoid z-fighting with the ground
+                    //? if <=1.20.6 {
+                        /*.getLerpedPos(MinecraftClient.getInstance().getTickDelta())
+                    *///?} else if <=1.21.4 {
+                        /*.getLerpedPos(MinecraftClient.getInstance().getRenderTickCounter().getTickDelta(false))
+                    *///?} else
+                        .getLerpedPos(MinecraftClient.getInstance().getRenderTickCounter().getTickProgress(false))
+                    .toVector3f().add(0, 0.1f, 0); // Add 0.1 to avoid z-fighting with the ground
 
             if (settings.removeLoops) {
                 detectAndRemoveLoops(playerPos);
@@ -93,54 +103,105 @@ public class Breadcrumbs implements ClientModInitializer {
 
         WorldRenderEvents.LAST.register((context) -> {
             Matrix4f matrix = context.matrixStack().peek().getPositionMatrix();
-            if (settings.renderThroughWalls) {
+            //? if >= 1.21.5
+            GpuDevice gpuDevice = RenderSystem.getDevice();
+
+            //? if <=1.21.4 {
+            /*if (settings.renderThroughWalls) {
                 RenderSystem.disableDepthTest();
             } else {
                 RenderSystem.enableDepthTest();
             }
+            *///?}
             Tessellator tessellator = Tessellator.getInstance();
+            //? if <=1.20.6 {
+            /*BufferBuilder buf = tessellator.getBuffer();
+             *///?} else
             BufferBuilder buf;
             Vec3d cameraPos = context.camera().getPos();
-            RenderSystem.setShader(GameRenderer::getPositionColorProgram);
+            //? if <=1.21.1 {
+            /*RenderSystem.setShader(GameRenderer::getPositionColorProgram);
+             *///?} else if <=1.21.4
+            /*RenderSystem.setShader(ShaderProgramKeys.POSITION_COLOR);*/
 
             int size = points.size();
 
-            GL11.glDisable(GL11.GL_CULL_FACE);
+            //? if <=1.21.4 {
+            /*GL11.glDisable(GL11.GL_CULL_FACE);
             RenderSystem.enableBlend();
+            *///?}
 
             if (settings.trailMode == TrailMode.LINES) {
                 boolean arrows = settings.renderArrows;
-                if (arrows)
+                if (arrows) {
+                    //? if <=1.20.6 {
+                    /*buf.begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
+                    *///?} else
                     buf = tessellator.begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
-                else // Optimization: using DEBUG_LINE_STRIP instead of DEBUG_LINES to reduce the number of vertices
+                } else { // Optimization: using DEBUG_LINE_STRIP instead of DEBUG_LINES to reduce the number of vertices
+                    //? if <=1.20.6 {
+                    /*buf.begin(VertexFormat.DrawMode.DEBUG_LINE_STRIP, VertexFormats.POSITION_COLOR);
+                    *///?} else
                     buf = tessellator.begin(VertexFormat.DrawMode.DEBUG_LINE_STRIP, VertexFormats.POSITION_COLOR);
-
-                GL11.glEnable(GL11.GL_LINE_SMOOTH); // Doesn't work?
+                }
 
                 drawLineTrail(size, arrows, buf, matrix, cameraPos);
 
-                GL11.glDisable(GL11.GL_LINE_SMOOTH);
                 if (size - (arrows ? 1 : 0) > 0 ) { // This will crash if there are no points
-                    BufferRenderer.drawWithGlobalProgram(buf.end());
+                    //? if <=1.21.4 {
+                    /*BufferRenderer.drawWithGlobalProgram(buf.end());
+                    *///?} else {
+                    if (arrows) {
+                        if (settings.renderThroughWalls) {
+                            RenderHelper.debugLinesNoDepth.draw(buf.end());
+                        } else {
+                            RenderHelper.debugLines.draw(buf.end());
+                        }
+                    } else {
+                        if (settings.renderThroughWalls) {
+                            RenderHelper.debugLineStripNoDepth.draw(buf.end());
+                        } else {
+                            RenderHelper.debugLineStrip.draw(buf.end());
+                        }
+                    }
+                    //?}
                 }
             } else if (settings.trailMode == TrailMode.THICK) {
+                //? if <=1.20.6 {
+                /*buf.begin(VertexFormat.DrawMode.TRIANGLE_STRIP, VertexFormats.POSITION_COLOR);
+                *///?} else
                 buf = tessellator.begin(VertexFormat.DrawMode.TRIANGLE_STRIP, VertexFormats.POSITION_COLOR);
 
                 drawThickTrail(size, buf, matrix, cameraPos);
 
                 if (size - 1 > 0) {
-                    BufferRenderer.drawWithGlobalProgram(buf.end());
+                    //? if <=1.21.4 {
+                    /*BufferRenderer.drawWithGlobalProgram(buf.end());
+                    *///?} else {
+                    if (settings.renderThroughWalls) {
+                        RenderHelper.triangleStripNoDepth.draw(buf.end());
+                    } else {
+                        RenderHelper.triangleStrip.draw(buf.end());
+                    }
+                    //?}
                 }
             }
-            RenderSystem.disableBlend();
+            //? if <=1.21.4 {
+            /*RenderSystem.disableBlend();
             GL11.glEnable(GL11.GL_CULL_FACE);
             RenderSystem.enableDepthTest();
+            *///?}
         });
     }
 
     private static void drawLineTrail(int size, boolean arrows, BufferBuilder buf, Matrix4f matrix, Vec3d cameraPos) {
         for (int i = 0; i < size - (arrows ? 1 : 0); i++) {
-            float[] color = getColor((float) i, size);
+            float[] color;
+            if ((positions.size() - 1) * settings.interpolationSteps >= size) {
+                color = getColor(i, size + settings.interpolationSteps);
+            } else {
+                color = getColor(i, size);
+            }
 
             Vector3f pos1 = points.get(i);
 
@@ -184,7 +245,12 @@ public class Breadcrumbs implements ClientModInitializer {
     private static void drawThickTrail(int size, BufferBuilder buf, Matrix4f matrix, Vec3d cameraPos) {
         for (int i = 0; i < size - 1; i++) {
             // The gradient looks silly with less than 30 points, and we only want to go from red to blue, not further
-            float[] color = getColor((float) i, size);
+            float[] color;
+            if ((positions.size() - 1) * settings.interpolationSteps >= size) {
+                color = getColor(i, size + settings.interpolationSteps);
+            } else {
+                color = getColor(i, size);
+            }
 
             Vector3f pos1 = points.get(i);
             Vector3f pos2 = points.get(i + 1);
@@ -201,7 +267,7 @@ public class Breadcrumbs implements ClientModInitializer {
             vertex(buf, matrix, p1, cameraPos, color);
             vertex(buf, matrix, p2, cameraPos, color);
 
-            if (i % arrowFrequency == arrowFrequency - 1) {
+            if (i % arrowFrequency == arrowFrequency - 1 && settings.renderArrows) {
                 // At the tip/thinnest point of the arrow, put 2 more points to make the base of the next arrow
                 p1 = new Vector3f((float) Math.sin(a0), 0, (float) Math.cos(a0)).mul(settings.arrowSize + settings.trailThickness).add(pos2);
                 p2 = new Vector3f((float) Math.sin(a1), 0, (float) Math.cos(a1)).mul(settings.arrowSize + settings.trailThickness).add(pos2);
@@ -238,7 +304,7 @@ public class Breadcrumbs implements ClientModInitializer {
 
     private static void detectAndRemoveLoops(Vector3f playerPos) {
         if (positions.size() > 3) { // It's impossible to have a loop with less than 3 line segments (4 points)
-            float loopThreshold = 1f;
+            float loopThreshold = 2f;
             int closePointIndex = -1;
 
             // Check if player is near any previous point (skip the last few points)
