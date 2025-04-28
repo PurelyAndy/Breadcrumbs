@@ -1,4 +1,4 @@
-package andy.breadcrumbs.config;
+package tech.encrusted.breadcrumbs.config;
 
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;

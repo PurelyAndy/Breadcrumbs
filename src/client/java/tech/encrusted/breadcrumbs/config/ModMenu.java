@@ -1,4 +1,4 @@
-package andy.breadcrumbs.config;
+package tech.encrusted.breadcrumbs.config;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
@@ -6,7 +6,7 @@ import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import net.minecraft.text.Text;
 
-import static andy.breadcrumbs.Breadcrumbs.settings;
+import static tech.encrusted.breadcrumbs.Breadcrumbs.settings;
 
 public class ModMenu implements ModMenuApi {
     @Override

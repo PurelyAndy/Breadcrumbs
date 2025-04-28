@@ -1,4 +1,4 @@
-package andy.breadcrumbs.config;
+package tech.encrusted.breadcrumbs.config;
 
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;

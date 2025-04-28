@@ -72,12 +72,22 @@ tasks.processResources {
 	inputs.property("name", mod.name)
 	inputs.property("version", mod.version)
 	inputs.property("mcdep", mcDep)
+	inputs.property("javaver", java.sourceCompatibility.toString())
+	inputs.property("fabricapiver", deps["fabric_api"])
+	inputs.property("modmenuver", deps["modmenu"])
+	inputs.property("clothconfigver", deps["cloth_config"])
+	inputs.property("placeholderapiver", deps["placeholder_api"])
 
 	val map = mapOf(
 		"id" to mod.id,
 		"name" to mod.name,
 		"version" to mod.version,
-		"mcdep" to mcDep
+		"mcdep" to mcDep,
+		"javaver" to java.sourceCompatibility.toString(),
+		"fabricapiver" to deps["fabric_api"],
+		"modmenuver" to deps["modmenu"],
+		"clothconfigver" to deps["cloth_config"],
+		"placeholderapiver" to deps["placeholder_api"],
 	)
 
 	filesMatching("fabric.mod.json") { expand(map) }

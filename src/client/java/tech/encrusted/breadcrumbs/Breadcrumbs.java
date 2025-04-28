@@ -1,19 +1,23 @@
-package andy.breadcrumbs;
+package tech.encrusted.breadcrumbs;
 
-import andy.breadcrumbs.config.Settings;
-import andy.breadcrumbs.config.TrailMode;
+import org.lwjgl.opengl.GL11;
+import tech.encrusted.breadcrumbs.config.Settings;
+import tech.encrusted.breadcrumbs.config.TrailMode;
+//? if >=1.21.5 {
 import com.mojang.blaze3d.systems.GpuDevice;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.VertexFormat;
+//?}
+//? if <=1.21.4 && >=1.21.2
+/*import net.minecraft.client.gl.ShaderProgramKeys;*/
+//? if <=1.21.4
+/*import net.minecraft.client.render.VertexFormat;*/
+import com.mojang.blaze3d.systems.RenderSystem;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.ShaderProgram;
-//? if <=1.21.4 && >1.21.1
-/*import net.minecraft.client.gl.ShaderProgramKeys;*/
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.*;
@@ -24,7 +28,6 @@ import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 import java.util.ArrayList;

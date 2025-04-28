@@ -1,10 +1,10 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" factoryName="Application" name="Minecraft Server (:1.20.4)" type="Application">
+  <configuration default="false" factoryName="Application" name="Minecraft Server (:1.20.3)" type="Application">
     <option name="MAIN_CLASS_NAME" value="net.fabricmc.devlaunchinjector.Main"/>
-    <module name="Breadcrumbs.1.20.4.main"/>
+    <module name="Breadcrumbs.1.20.3.main"/>
     <option name="PROGRAM_PARAMETERS" value="nogui"/>
-    <option name="VM_PARAMETERS" value="-Dfabric.dli.config=R:\repos\Breadcrumbs\versions\1.20.4\.gradle\loom-cache\launch.cfg -Dfabric.dli.env=server -Dfabric.dli.main=net.fabricmc.loader.impl.launch.knot.KnotServer"/>
-    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/versions\1.20.4/../../run/"/>
+    <option name="VM_PARAMETERS" value="-Dfabric.dli.config=R:\repos\Breadcrumbs\versions\1.20.3\.gradle\loom-cache\launch.cfg -Dfabric.dli.env=server -Dfabric.dli.main=net.fabricmc.loader.impl.launch.knot.KnotServer"/>
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/versions\1.20.3/../../run/"/>
     <method v="2">
       <option enabled="true" name="Make"/>
     </method>

@@ -1,0 +1,38 @@
+{
+	"schemaVersion": 1,
+	"id": "${id}",
+	"version": "${version}",
+	"name": "${name}",
+	"description": "Starts recording a trail of where you've been upon pressing a configurable keybind.",
+	"authors": [
+		"PurelyAndy"
+	],
+	"contact": {
+		"homepage": "https://github.com/PurelyAndy/",
+		"sources": "https://github.com/PurelyAndy/Breadcrumbs"
+	},
+	"license": "MIT",
+	"icon": "assets/breadcrumbs/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"client": [
+			"tech.encrusted.breadcrumbs.Breadcrumbs"
+		],
+		"modmenu": [
+			"tech.encrusted.breadcrumbs.config.ModMenu"
+		]
+	},
+	"mixins": [
+	],
+	"depends": {
+		"fabricloader": ">=0.16.14",
+		"minecraft": "${mcdep}",
+		"java": ">=${javaver}",
+		"fabric-api": ">=${fabricapiver}",
+		"modmenu": ">=${modmenuver}",
+		"cloth-config2": ">=${clothconfigver}",
+		"placeholder-api": ">=${placeholderapiver}"
+	},
+	"suggests": {
+	}
+}
