@@ -22,7 +22,7 @@ public class CatmullRomSpline {
         }
 
         int offset = 1;
-        if (positions.get(positions.size() - 1).distance(positions.get(positions.size() - 2)) < 0.22) {
+        if (positions.get(positions.size() - 1).distance(positions.get(positions.size() - 2)) < 0.26) {
             offset = 2;
         }
         for (int i = 0; i < size - offset; i++) {

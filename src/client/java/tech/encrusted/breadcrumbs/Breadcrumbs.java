@@ -1,17 +1,19 @@
 package tech.encrusted.breadcrumbs;
 
-import org.lwjgl.opengl.GL11;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import net.minecraft.client.render.Tessellator;
 import tech.encrusted.breadcrumbs.config.Settings;
 import tech.encrusted.breadcrumbs.config.TrailMode;
+
 //? if >=1.21.5 {
 import com.mojang.blaze3d.systems.GpuDevice;
-import com.mojang.blaze3d.vertex.VertexFormat;
 //?}
 //? if <=1.21.4 && >=1.21.2
 /*import net.minecraft.client.gl.ShaderProgramKeys;*/
 //? if <=1.21.4
-/*import net.minecraft.client.render.VertexFormat;*/
-import com.mojang.blaze3d.systems.RenderSystem;
+/*import org.lwjgl.opengl.GL11;*/
+
 import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -30,6 +32,7 @@ import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
+import java.io.Console;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -105,6 +108,9 @@ public class Breadcrumbs implements ClientModInitializer {
         });
 
         WorldRenderEvents.LAST.register((context) -> {
+            int size = points.size();
+            if (size == 0)
+                return;
             Matrix4f matrix = context.matrixStack().peek().getPositionMatrix();
             //? if >= 1.21.5
             GpuDevice gpuDevice = RenderSystem.getDevice();
@@ -127,8 +133,6 @@ public class Breadcrumbs implements ClientModInitializer {
              *///?} else if <=1.21.4
             /*RenderSystem.setShader(ShaderProgramKeys.POSITION_COLOR);*/
 
-            int size = points.size();
-
             //? if <=1.21.4 {
             /*GL11.glDisable(GL11.GL_CULL_FACE);
             RenderSystem.enableBlend();
@@ -150,21 +154,25 @@ public class Breadcrumbs implements ClientModInitializer {
 
                 drawLineTrail(size, arrows, buf, matrix, cameraPos);
 
+                //? if <=1.20.6 {
+                /*BufferBuilder.BuiltBuffer buffer = buf.end();
+                *///?} else
+                BuiltBuffer buffer = buf.end();
                 if (size - (arrows ? 1 : 0) > 0 ) { // This will crash if there are no points
                     //? if <=1.21.4 {
-                    /*BufferRenderer.drawWithGlobalProgram(buf.end());
+                    /*BufferRenderer.drawWithGlobalProgram(buffer);
                     *///?} else {
                     if (arrows) {
                         if (settings.renderThroughWalls) {
-                            RenderHelper.debugLinesNoDepth.draw(buf.end());
+                            RenderHelper.debugLinesNoDepth.draw(buffer);
                         } else {
-                            RenderHelper.debugLines.draw(buf.end());
+                            RenderHelper.debugLines.draw(buffer);
                         }
                     } else {
                         if (settings.renderThroughWalls) {
-                            RenderHelper.debugLineStripNoDepth.draw(buf.end());
+                            RenderHelper.debugLineStripNoDepth.draw(buffer);
                         } else {
-                            RenderHelper.debugLineStrip.draw(buf.end());
+                            RenderHelper.debugLineStrip.draw(buffer);
                         }
                     }
                     //?}
@@ -177,14 +185,18 @@ public class Breadcrumbs implements ClientModInitializer {
 
                 drawThickTrail(size, buf, matrix, cameraPos);
 
+                //? if <=1.20.6
+                /*BufferBuilder.BuiltBuffer buffer = buf.end();*/
                 if (size - 1 > 0) {
+                    //? if >=1.21
+                    BuiltBuffer buffer = buf.end();
                     //? if <=1.21.4 {
-                    /*BufferRenderer.drawWithGlobalProgram(buf.end());
+                    /*BufferRenderer.drawWithGlobalProgram(buffer);
                     *///?} else {
                     if (settings.renderThroughWalls) {
-                        RenderHelper.triangleStripNoDepth.draw(buf.end());
+                        RenderHelper.triangleStripNoDepth.draw(buffer);
                     } else {
-                        RenderHelper.triangleStrip.draw(buf.end());
+                        RenderHelper.triangleStrip.draw(buffer);
                     }
                     //?}
                 }
@@ -246,6 +258,8 @@ public class Breadcrumbs implements ClientModInitializer {
     }
 
     private static void drawThickTrail(int size, BufferBuilder buf, Matrix4f matrix, Vec3d cameraPos) {
+        double oldAngle = 0;
+        boolean swapped = false;
         for (int i = 0; i < size - 1; i++) {
             // The gradient looks silly with less than 30 points, and we only want to go from red to blue, not further
             float[] color;
@@ -256,10 +270,11 @@ public class Breadcrumbs implements ClientModInitializer {
             }
 
             Vector3f pos1 = points.get(i);
-            Vector3f pos2 = points.get(i + 1);
+            Vector3f pos2 = equalify(pos1, points.get(i + 1));
 
-            float a0 = (float) Math.atan2(pos2.x - pos1.x, pos2.z - pos1.z) + (float) Math.PI / 2;
-            float a1 = (float) Math.atan2(pos2.x - pos1.x, pos2.z - pos1.z) - (float) Math.PI / 2;
+            double angle = Math.atan2(pos2.x - pos1.x, pos2.z - pos1.z);
+            double a0 = angle + Math.PI / 2;
+            double a1 = angle - Math.PI / 2;
 
             int arrowFrequency = settings.arrowFrequency; // An arrow frequency of 1 with no interpolation would result in no arrows at all
             arrowFrequency *= settings.smoothInterpolation ? settings.interpolationSteps : 1;
@@ -267,8 +282,17 @@ public class Breadcrumbs implements ClientModInitializer {
             Vector3f p1 = new Vector3f((float) Math.sin(a0), 0, (float) Math.cos(a0)).mul(thickness).add(pos2);
             Vector3f p2 = new Vector3f((float) Math.sin(a1), 0, (float) Math.cos(a1)).mul(thickness).add(pos2);
 
-            vertex(buf, matrix, p1, cameraPos, color);
-            vertex(buf, matrix, p2, cameraPos, color);
+            if (Math.cos(angle - oldAngle) < 0) {
+                swapped = !swapped;
+            }
+
+            if (swapped) {
+                vertex(buf, matrix, p1, cameraPos, color);
+                vertex(buf, matrix, p2, cameraPos, color);
+            } else {
+                vertex(buf, matrix, p2, cameraPos, color);
+                vertex(buf, matrix, p1, cameraPos, color);
+            }
 
             if (i % arrowFrequency == arrowFrequency - 1 && settings.renderArrows) {
                 // At the tip/thinnest point of the arrow, put 2 more points to make the base of the next arrow
@@ -277,11 +301,46 @@ public class Breadcrumbs implements ClientModInitializer {
                 vertex(buf, matrix, p1, cameraPos, color);
                 vertex(buf, matrix, p2, cameraPos, color);
             }
+
+            oldAngle = angle;
         }
     }
 
+    private static Vector3f equalify(Vector3f v1, Vector3f v2) {
+        int x1 = Float.floatToIntBits(v1.x);
+        int y1 = Float.floatToIntBits(v1.y);
+        int z1 = Float.floatToIntBits(v1.z);
+        int x2 = Float.floatToIntBits(v2.x);
+        int y2 = Float.floatToIntBits(v2.y);
+        int z2 = Float.floatToIntBits(v2.z);
+
+        if (Math.abs(x1 - x2) <= 1) {
+            v2.x = v1.x;
+        }
+        if (Math.abs(y1 - y2) <= 1) {
+            v2.y = v1.y;
+        }
+        if (Math.abs(z1 - z2) <= 1) {
+            v2.z = v1.z;
+        }
+
+        return v2;
+    }
+
     private static void vertex(BufferBuilder buf, Matrix4f matrix, Vector3f pos1, Vec3d cameraPos, float[] color) {
-        buf.vertex(matrix, (float) (pos1.x - cameraPos.x), (float) (pos1.y - cameraPos.y), (float) (pos1.z - cameraPos.z)).color(color[0], color[1], color[2], Breadcrumbs.settings.trailOpacity);
+        buf.vertex(
+                    matrix,
+                    (float) (pos1.x - cameraPos.x),
+                    (float) (pos1.y - cameraPos.y),
+                    (float) (pos1.z - cameraPos.z)
+                )
+                .color(
+                     color[0],
+                     color[1], color[2], Breadcrumbs.settings.trailOpacity
+                )
+                //? if <=1.20.6
+                /*.next()*/
+                ;
     }
 
     private static float getSegmentThickness(int i, int arrowFrequency) {
@@ -301,8 +360,7 @@ public class Breadcrumbs implements ClientModInitializer {
     private static float[] getColor(float i, int size) {
         // The gradient looks silly with less than 30 points, and we only want to go from red to blue, not further
         float hue = (i / Math.max(size, 30)) * 0.5f;
-        float[] color = new Color(Color.HSBtoRGB(hue, saturation, brightness)).getRGBComponents(null);
-        return color;
+        return new Color(Color.HSBtoRGB(hue, saturation, brightness)).getRGBComponents(null);
     }
 
     private static void detectAndRemoveLoops(Vector3f playerPos) {
