@@ -4,6 +4,7 @@ import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.serializer.ConfigSerializer;
 import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
+import tech.encrusted.breadcrumbs.State;
 
 
 @Config(name = "breadcrumbs")
@@ -20,6 +21,11 @@ public class Settings implements ConfigData {
     public float arrowSize = 0.2f;
     public int arrowFrequency = 5;
     public boolean removeLoops = false;
+
+    public void setTrailMode(TrailMode mode) {
+        this.trailMode = mode;
+        State.trail = mode.trail;
+    }
 
     public static ConfigSerializer.Factory<Settings> factory = (Config config, Class<Settings> clazz) -> new Toml4jConfigSerializer<>(config, clazz) {
         public Settings deserialize() {

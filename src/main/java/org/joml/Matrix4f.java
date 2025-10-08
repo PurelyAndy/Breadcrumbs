@@ -23,7 +23,7 @@
  */
 
 //? if <=1.19.2 {
-/*package org.joml;
+package org.joml;
 
 import org.intellij.lang.annotations.MagicConstant;
 
@@ -32,7 +32,7 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
-/^*
+/**
  * Contains the definition of a 4x4 matrix of floats, and associated functions to transform
  * it. The matrix is column-major to match OpenGL's interpretation, and it looks like this:
  * <p>
@@ -43,7 +43,7 @@ import java.io.ObjectOutput;
  * 
  * @author Richard Greenlees
  * @author Kai Burjack
- ^/
+ */
 public class Matrix4f implements Externalizable, Cloneable, Matrix4fc {
 
     private static final long serialVersionUID = 1L;
@@ -54,9 +54,9 @@ public class Matrix4f implements Externalizable, Cloneable, Matrix4fc {
     float m20, m21, m22, m23;
     float m30, m31, m32, m33;
 
-    /^*
+    /**
      * Create a new {@link Matrix4f} and set it to {@link #identity() identity}.
-     ^/
+     */
     public Matrix4f() {
         this._m00(1.0f)
             ._m11(1.0f)
@@ -88,7 +88,7 @@ public class Matrix4f implements Externalizable, Cloneable, Matrix4fc {
                 ._m33(m33)
                 .determineProperties();
     }
-    /^*
+    /**
      * Create a new 4x4 matrix using the supplied float values.
      * <p>
      * The matrix layout will be:<br><br>
@@ -129,7 +129,7 @@ public class Matrix4f implements Externalizable, Cloneable, Matrix4fc {
      *          the value of m32
      * @param m33
      *          the value of m33
-     ^/
+     */
     public Matrix4f(float m00, float m01, float m02, float m03,
                     float m10, float m11, float m12, float m13,
                     float m20, float m21, float m22, float m23,
@@ -158,7 +158,7 @@ public class Matrix4f implements Externalizable, Cloneable, Matrix4fc {
         return this;
     }
 
-    /^*
+    /**
      * Assume the given properties about this matrix.
      * <p>
      * Use one or multiple of 0, {@link Matrix4fc#PROPERTY_IDENTITY},
@@ -168,18 +168,18 @@ public class Matrix4f implements Externalizable, Cloneable, Matrix4fc {
      * @param properties
      *          bitset of the properties to assume about this matrix
      * @return this
-     ^/
+     */
     public Matrix4f assume(@MagicConstant(intValues = {PROPERTY_UNKNOWN, PROPERTY_IDENTITY, PROPERTY_TRANSLATION, PROPERTY_AFFINE, PROPERTY_ORTHONORMAL, PROPERTY_PERSPECTIVE}) int properties) {
         this._properties(properties);
         return this;
     }
 
-    /^*
+    /**
      * Compute and set the matrix properties returned by {@link #properties()} based
      * on the current matrix element values.
      *
      * @return this
-     ^/
+     */
     public Matrix4f determineProperties() {
         int properties = PROPERTY_UNKNOWN;
         if (m03() == 0.0f && m13() == 0.0f) {
@@ -191,10 +191,10 @@ public class Matrix4f implements Externalizable, Cloneable, Matrix4fc {
                     if (m30() == 0.0f && m31() == 0.0f && m32() == 0.0f)
                         properties |= PROPERTY_IDENTITY;
                 }
-                /^
+                /*
                  * We do not determine orthogonality, since it would require arbitrary epsilons
                  * and is rather expensive (6 dot products) in the worst case.
-                 ^/
+                 */
             } else if (m01() == 0.0f && m02() == 0.0f && m10() == 0.0f && m12() == 0.0f && m20() == 0.0f && m21() == 0.0f
                     && m30() == 0.0f && m31() == 0.0f && m33() == 0.0f) {
                 properties |= PROPERTY_PERSPECTIVE;
@@ -258,13 +258,13 @@ public class Matrix4f implements Externalizable, Cloneable, Matrix4fc {
         return m33;
     }
 
-    /^*
+    /**
      * Set the value of the matrix element at column 0 and row 0.
      *
      * @param m00
      *          the new value
      * @return this
-     ^/
+     */
     public Matrix4f m00(float m00) {
         this.m00 = m00;
         properties &= ~PROPERTY_ORTHONORMAL;
@@ -272,13 +272,13 @@ public class Matrix4f implements Externalizable, Cloneable, Matrix4fc {
             properties &= ~(PROPERTY_IDENTITY | PROPERTY_TRANSLATION);
         return this;
     }
-    /^*
+    /**
      * Set the value of the matrix element at column 0 and row 1.
      *
      * @param m01
      *          the new value
      * @return this
-     ^/
+     */
     public Matrix4f m01(float m01) {
         this.m01 = m01;
         properties &= ~PROPERTY_ORTHONORMAL;
@@ -286,13 +286,13 @@ public class Matrix4f implements Externalizable, Cloneable, Matrix4fc {
             properties &= ~(PROPERTY_IDENTITY | PROPERTY_PERSPECTIVE | PROPERTY_TRANSLATION);
         return this;
     }
-    /^*
+    /**
      * Set the value of the matrix element at column 0 and row 2.
      *
      * @param m02
      *          the new value
      * @return this
-     ^/
+     */
     public Matrix4f m02(float m02) {
         this.m02 = m02;
         properties &= ~PROPERTY_ORTHONORMAL;
@@ -300,26 +300,26 @@ public class Matrix4f implements Externalizable, Cloneable, Matrix4fc {
             properties &= ~(PROPERTY_IDENTITY | PROPERTY_PERSPECTIVE | PROPERTY_TRANSLATION);
         return this;
     }
-    /^*
+    /**
      * Set the value of the matrix element at column 0 and row 3.
      *
      * @param m03
      *          the new value
      * @return this
-     ^/
+     */
     public Matrix4f m03(float m03) {
         this.m03 = m03;
         if (m03 != 0.0f)
             properties = PROPERTY_UNKNOWN;
         return this;
     }
-    /^*
+    /**
      * Set the value of the matrix element at column 1 and row 0.
      *
      * @param m10
      *          the new value
      * @return this
-     ^/
+     */
     public Matrix4f m10(float m10) {
         this.m10 = m10;
         properties &= ~PROPERTY_ORTHONORMAL;
@@ -327,13 +327,13 @@ public class Matrix4f implements Externalizable, Cloneable, Matrix4fc {
             properties &= ~(PROPERTY_IDENTITY | PROPERTY_PERSPECTIVE | PROPERTY_TRANSLATION);
         return this;
     }
-    /^*
+    /**
      * Set the value of the matrix element at column 1 and row 1.
      *
      * @param m11
      *          the new value
      * @return this
-     ^/
+     */
     public Matrix4f m11(float m11) {
         this.m11 = m11;
         properties &= ~PROPERTY_ORTHONORMAL;
@@ -341,13 +341,13 @@ public class Matrix4f implements Externalizable, Cloneable, Matrix4fc {
             properties &= ~(PROPERTY_IDENTITY | PROPERTY_TRANSLATION);
         return this;
     }
-    /^*
+    /**
      * Set the value of the matrix element at column 1 and row 2.
      *
      * @param m12
      *          the new value
      * @return this
-     ^/
+     */
     public Matrix4f m12(float m12) {
         this.m12 = m12;
         properties &= ~PROPERTY_ORTHONORMAL;
@@ -355,26 +355,26 @@ public class Matrix4f implements Externalizable, Cloneable, Matrix4fc {
             properties &= ~(PROPERTY_IDENTITY | PROPERTY_PERSPECTIVE | PROPERTY_TRANSLATION);
         return this;
     }
-    /^*
+    /**
      * Set the value of the matrix element at column 1 and row 3.
      *
      * @param m13
      *          the new value
      * @return this
-     ^/
+     */
     public Matrix4f m13(float m13) {
         this.m13 = m13;
         if (m13 != 0.0f)
             properties = PROPERTY_UNKNOWN;
         return this;
     }
-    /^*
+    /**
      * Set the value of the matrix element at column 2 and row 0.
      *
      * @param m20
      *          the new value
      * @return this
-     ^/
+     */
     public Matrix4f m20(float m20) {
         this.m20 = m20;
         properties &= ~PROPERTY_ORTHONORMAL;
@@ -382,13 +382,13 @@ public class Matrix4f implements Externalizable, Cloneable, Matrix4fc {
             properties &= ~(PROPERTY_IDENTITY | PROPERTY_PERSPECTIVE | PROPERTY_TRANSLATION);
         return this;
     }
-    /^*
+    /**
      * Set the value of the matrix element at column 2 and row 1.
      *
      * @param m21
      *          the new value
      * @return this
-     ^/
+     */
     public Matrix4f m21(float m21) {
         this.m21 = m21;
         properties &= ~PROPERTY_ORTHONORMAL;
@@ -396,13 +396,13 @@ public class Matrix4f implements Externalizable, Cloneable, Matrix4fc {
             properties &= ~(PROPERTY_IDENTITY | PROPERTY_PERSPECTIVE | PROPERTY_TRANSLATION);
         return this;
     }
-    /^*
+    /**
      * Set the value of the matrix element at column 2 and row 2.
      *
      * @param m22
      *          the new value
      * @return this
-     ^/
+     */
     public Matrix4f m22(float m22) {
         this.m22 = m22;
         properties &= ~PROPERTY_ORTHONORMAL;
@@ -410,65 +410,65 @@ public class Matrix4f implements Externalizable, Cloneable, Matrix4fc {
             properties &= ~(PROPERTY_IDENTITY | PROPERTY_TRANSLATION);
         return this;
     }
-    /^*
+    /**
      * Set the value of the matrix element at column 2 and row 3.
      *
      * @param m23
      *          the new value
      * @return this
-     ^/
+     */
     public Matrix4f m23(float m23) {
         this.m23 = m23;
         if (m23 != 0.0f)
             properties &= ~(PROPERTY_IDENTITY | PROPERTY_AFFINE | PROPERTY_TRANSLATION | PROPERTY_ORTHONORMAL);
         return this;
     }
-    /^*
+    /**
      * Set the value of the matrix element at column 3 and row 0.
      *
      * @param m30
      *          the new value
      * @return this
-     ^/
+     */
     public Matrix4f m30(float m30) {
         this.m30 = m30;
         if (m30 != 0.0f)
             properties &= ~(PROPERTY_IDENTITY | PROPERTY_PERSPECTIVE);
         return this;
     }
-    /^*
+    /**
      * Set the value of the matrix element at column 3 and row 1.
      *
      * @param m31
      *          the new value
      * @return this
-     ^/
+     */
     public Matrix4f m31(float m31) {
         this.m31 = m31;
         if (m31 != 0.0f)
             properties &= ~(PROPERTY_IDENTITY | PROPERTY_PERSPECTIVE);
         return this;
     }
-    /^*
+    /**
      * Set the value of the matrix element at column 3 and row 2.
      *
      * @param m32
      *          the new value
      * @return this
-     ^/
+     */
     public Matrix4f m32(float m32) {
         this.m32 = m32;
         if (m32 != 0.0f)
             properties &= ~(PROPERTY_IDENTITY | PROPERTY_PERSPECTIVE);
         return this;
     }
-    /^*
+    /**
      * Set the value of the matrix element at column 3 and row 3.
      *
      * @param m33
      *          the new value
      * @return this
-     ^/
+     */
     public Matrix4f m33(float m33) {
         this.m33 = m33;
         if (m33 != 0.0f)
@@ -478,179 +478,179 @@ public class Matrix4f implements Externalizable, Cloneable, Matrix4fc {
         return this;
     }
 
-    /^*
+    /**
      * Set the value of the matrix element at column 0 and row 0 without updating the properties of the matrix.
      *
      * @param m00
      *          the new value
      * @return this
-     ^/
+     */
     Matrix4f _m00(float m00) {
         this.m00 = m00;
         return this;
     }
-    /^*
+    /**
      * Set the value of the matrix element at column 0 and row 1 without updating the properties of the matrix.
      *
      * @param m01
      *          the new value
      * @return this
-     ^/
+     */
     Matrix4f _m01(float m01) {
         this.m01 = m01;
         return this;
     }
-    /^*
+    /**
      * Set the value of the matrix element at column 0 and row 2 without updating the properties of the matrix.
      *
      * @param m02
      *          the new value
      * @return this
-     ^/
+     */
     Matrix4f _m02(float m02) {
         this.m02 = m02;
         return this;
     }
-    /^*
+    /**
      * Set the value of the matrix element at column 0 and row 3 without updating the properties of the matrix.
      *
      * @param m03
      *          the new value
      * @return this
-     ^/
+     */
     Matrix4f _m03(float m03) {
         this.m03 = m03;
         return this;
     }
-    /^*
+    /**
      * Set the value of the matrix element at column 1 and row 0 without updating the properties of the matrix.
      *
      * @param m10
      *          the new value
      * @return this
-     ^/
+     */
     Matrix4f _m10(float m10) {
         this.m10 = m10;
         return this;
     }
-    /^*
+    /**
      * Set the value of the matrix element at column 1 and row 1 without updating the properties of the matrix.
      *
      * @param m11
      *          the new value
      * @return this
-     ^/
+     */
     Matrix4f _m11(float m11) {
         this.m11 = m11;
         return this;
     }
-    /^*
+    /**
      * Set the value of the matrix element at column 1 and row 2 without updating the properties of the matrix.
      *
      * @param m12
      *          the new value
      * @return this
-     ^/
+     */
     Matrix4f _m12(float m12) {
         this.m12 = m12;
         return this;
     }
-    /^*
+    /**
      * Set the value of the matrix element at column 1 and row 3 without updating the properties of the matrix.
      *
      * @param m13
      *          the new value
      * @return this
-     ^/
+     */
     Matrix4f _m13(float m13) {
         this.m13 = m13;
         return this;
     }
-    /^*
+    /**
      * Set the value of the matrix element at column 2 and row 0 without updating the properties of the matrix.
      *
      * @param m20
      *          the new value
      * @return this
-     ^/
+     */
     Matrix4f _m20(float m20) {
         this.m20 = m20;
         return this;
     }
-    /^*
+    /**
      * Set the value of the matrix element at column 2 and row 1 without updating the properties of the matrix.
      *
      * @param m21
      *          the new value
      * @return this
-     ^/
+     */
     Matrix4f _m21(float m21) {
         this.m21 = m21;
         return this;
     }
-    /^*
+    /**
      * Set the value of the matrix element at column 2 and row 2 without updating the properties of the matrix.
      *
      * @param m22
      *          the new value
      * @return this
-     ^/
+     */
     Matrix4f _m22(float m22) {
         this.m22 = m22;
         return this;
     }
-    /^*
+    /**
      * Set the value of the matrix element at column 2 and row 3 without updating the properties of the matrix.
      *
      * @param m23
      *          the new value
      * @return this
-     ^/
+     */
     Matrix4f _m23(float m23) {
         this.m23 = m23;
         return this;
     }
-    /^*
+    /**
      * Set the value of the matrix element at column 3 and row 0 without updating the properties of the matrix.
      *
      * @param m30
      *          the new value
      * @return this
-     ^/
+     */
     Matrix4f _m30(float m30) {
         this.m30 = m30;
         return this;
     }
-    /^*
+    /**
      * Set the value of the matrix element at column 3 and row 1 without updating the properties of the matrix.
      *
      * @param m31
      *          the new value
      * @return this
-     ^/
+     */
     Matrix4f _m31(float m31) {
         this.m31 = m31;
         return this;
     }
-    /^*
+    /**
      * Set the value of the matrix element at column 3 and row 2 without updating the properties of the matrix.
      *
      * @param m32
      *          the new value
      * @return this
-     ^/
+     */
     Matrix4f _m32(float m32) {
         this.m32 = m32;
         return this;
     }
 
-    /^*
+    /**
      * Set the value of the matrix element at column 3 and row 3 without updating the properties of the matrix.
      *
      * @param m33
      *          the new value
      * @return this
-     ^/
+     */
     Matrix4f _m33(float m33) {
         this.m33 = m33;
         return this;
@@ -719,4 +719,4 @@ public class Matrix4f implements Externalizable, Cloneable, Matrix4fc {
     }
 }
 
-*///?}
+//?}

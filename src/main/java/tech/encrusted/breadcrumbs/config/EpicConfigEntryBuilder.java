@@ -7,13 +7,13 @@ import me.shedaniel.clothconfig2.gui.entries.DropdownBoxEntry;
 import me.shedaniel.clothconfig2.impl.builders.*;
 import me.shedaniel.clothconfig2.impl.ConfigEntryBuilderImpl;
 import net.minecraft.text.Text;
-import tech.encrusted.breadcrumbs.Txt;
+import tech.encrusted.breadcrumbs.V;
 
 import java.util.List;
 
 // I wish whoever made this API would've allowed me to extend the class instead of having to wrap it
 public class EpicConfigEntryBuilder implements ConfigEntryBuilder {
-    private final Text resetButtonTranslationKey = Txt.translatable("text.cloth-config.reset_value");
+    private final Text resetButtonTranslationKey = V.translatableText("text.cloth-config.reset_value");
     private ConfigEntryBuilderImpl builder;
 
     public EpicConfigEntryBuilder() {

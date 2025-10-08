@@ -117,3 +117,30 @@ tasks.register<Copy>("buildAndCollect") {
 	into(rootProject.layout.buildDirectory.file("libs/${mod.version}"))
 	dependsOn("build")
 }
+
+stonecutter {
+    replacements.string("draw_modes_1") {
+        direction = eval(mcVersion, "<=1.16.5")
+        replace("VertexFormat.DrawMode.DEBUG_LINE", "GL11.GL_LINE")
+    }
+    replacements.string("draw_modes_2") {
+        direction = eval(mcVersion, "<=1.16.5")
+        replace("VertexFormat.DrawMode.TRIANGLE", "GL11.GL_TRIANGLE")
+    }
+    replacements.string {
+        direction = eval(mcVersion, "<=1.20.6")
+        replace("buf = V.begin(tessellator", "V.begin(buf")
+    }
+
+    swaps["draw_mode"] = when {
+        eval(mcVersion, "<=1.16.5") -> "int"
+        else -> "VertexFormat.DrawMode"
+    }
+    swaps["set_shader"] = when {
+        eval(mcVersion, "<=1.16.5") -> "RenderSystem.disableTexture();"
+        eval(mcVersion, "<=1.19.2") -> "RenderSystem.setShader(GameRenderer::getPositionColorShader);"
+        eval(mcVersion, "<=1.21.1") -> "RenderSystem.setShader(GameRenderer::getPositionColorProgram);"
+        eval(mcVersion, "<=1.21.4") -> "RenderSystem.setShader(ShaderProgramKeys.POSITION_COLOR);"
+        else -> "// >=1.21.5 placeholder"
+    }
+}

@@ -23,7 +23,7 @@
  */
 
 //? if <=1.19.2 {
-/*package org.joml;
+package org.joml;
 
 //#ifdef __HAS_NIO__
 
@@ -33,75 +33,75 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-/^*
+/**
  * Interface to a read-only view of a 3x3 matrix of single-precision floats.
  * 
  * @author Kai Burjack
- ^/
+ */
 public interface Matrix3fc {
 
-    /^*
+    /**
      * Return the value of the matrix element at column 0 and row 0.
      * 
      * @return the value of the matrix element
-     ^/
+     */
     float m00();
 
-    /^*
+    /**
      * Return the value of the matrix element at column 0 and row 1.
      * 
      * @return the value of the matrix element
-     ^/
+     */
     float m01();
 
-    /^*
+    /**
      * Return the value of the matrix element at column 0 and row 2.
      * 
      * @return the value of the matrix element
-     ^/
+     */
     float m02();
 
-    /^*
+    /**
      * Return the value of the matrix element at column 1 and row 0.
      * 
      * @return the value of the matrix element
-     ^/
+     */
     float m10();
 
-    /^*
+    /**
      * Return the value of the matrix element at column 1 and row 1.
      * 
      * @return the value of the matrix element
-     ^/
+     */
     float m11();
 
-    /^*
+    /**
      * Return the value of the matrix element at column 1 and row 2.
      * 
      * @return the value of the matrix element
-     ^/
+     */
     float m12();
 
-    /^*
+    /**
      * Return the value of the matrix element at column 2 and row 0.
      * 
      * @return the value of the matrix element
-     ^/
+     */
     float m20();
 
-    /^*
+    /**
      * Return the value of the matrix element at column 2 and row 1.
      * 
      * @return the value of the matrix element
-     ^/
+     */
     float m21();
 
-    /^*
+    /**
      * Return the value of the matrix element at column 2 and row 2.
      * 
      * @return the value of the matrix element
-     ^/
+     */
     float m22();
 }
 
-*///?}
+//?}
