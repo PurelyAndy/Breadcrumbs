@@ -1,6 +1,7 @@
 package tech.encrusted.breadcrumbs.styles;
 
 import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Matrix4f;
@@ -12,13 +13,23 @@ import java.awt.*;
 import static tech.encrusted.breadcrumbs.Breadcrumbs.settings;
 
 public abstract class Trail {
-    public void render(BufferBuilder buf, Matrix4f matrix, Vec3d cameraPos) {
-        buf = V.begin(tessellator, getDrawMode(), VertexFormats.POSITION_COLOR);
+    public void render(
+            //? if <=1.20.6 {
+            /*BufferBuilder buf,*/
+            //?} else {
+            Tessellator tessellator,
+            //?}
+            Matrix4f matrix,
+            Vec3d cameraPos) {
+        BufferBuilder buf = V.begin(tessellator, getDrawMode(), VertexFormats.POSITION_COLOR);
         build(buf, matrix, cameraPos);
         draw(buf);
     }
+
     protected abstract void build(BufferBuilder buf, Matrix4f matrix, Vec3d cameraPos);
+
     protected abstract void draw(BufferBuilder buf);
+
     protected abstract V.DrawMode getDrawMode();
 
     protected static float[] getColor(int i, int size) {
@@ -28,6 +39,7 @@ public abstract class Trail {
             return gradient(i, size);
         }
     }
+
     private static float[] gradient(float i, int size) {
         // The gradient looks silly with less than 30 points, and we only want to go from red to blue, not further
         float hue = (i / Math.max(size, 30)) * 0.5f;

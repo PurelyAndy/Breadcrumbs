@@ -6,6 +6,7 @@ import net.minecraft.util.math.Vec3d;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Vector3d;
+import tech.encrusted.breadcrumbs.RenderHelper;
 import tech.encrusted.breadcrumbs.State;
 import tech.encrusted.breadcrumbs.V;
 
@@ -60,13 +61,12 @@ public class LinesTrail extends Trail {
 
     @Override
     public void draw(BufferBuilder buf) {
-        var buffer = V.endBuffer(buf);
-
         if (State.points.size() > 1) {
+            var buffer = V.endBuffer(buf);
             //? if <=1.21.4 {
-            /*V.draw(buffer);
-            *///?} else {
-            if (arrows) {
+            V.draw(buffer);
+            //?} else {
+            /*if (settings.renderArrows) {
                 if (settings.renderThroughWalls) {
                     RenderHelper.debugLinesNoDepth.draw(buffer);
                 } else {
@@ -79,7 +79,7 @@ public class LinesTrail extends Trail {
                     RenderHelper.debugLineStrip.draw(buffer);
                 }
             }
-            //?}
+            *///?}
         }
         //? if <=1.18.2 {
         /*else {

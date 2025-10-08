@@ -3,11 +3,8 @@
 
 package tech.encrusted.breadcrumbs;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.render.Tessellator;
 import tech.encrusted.breadcrumbs.config.Settings;
-import tech.encrusted.breadcrumbs.config.TrailMode;
-
 import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -17,19 +14,14 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.util.math.Vec3d;
-import org.joml.Matrix3f;
 import org.joml.Matrix4f;
-import org.joml.Vector3d;
 import org.lwjgl.glfw.GLFW;
 
-import java.awt.*;
-
-//? if <=1.21.4 && >=1.21.2 {
-/*import net.minecraft.client.gl.ShaderProgramKeys;
-*///?}
 //? if <=1.21.4 {
-/*import org.lwjgl.opengl.GL11;
-*///?}
+import org.lwjgl.opengl.GL11;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gl.ShaderProgramKeys;
+//?}
 //? if >=1.21.9 {
 /*import net.minecraft.util.Identifier;*/
 //?}
@@ -53,7 +45,8 @@ public class Breadcrumbs implements ClientModInitializer {
         AutoConfig.register(Settings.class, Settings.factory);
         Breadcrumbs.settings = AutoConfig.getConfigHolder(Settings.class).getConfig();
 
-        ClientTickEvents.END_CLIENT_TICK.register(State::update);
+        ClientTickEvents.END_CLIENT_TICK.register(State::tick);
+        WorldRenderEvents.LAST.register(State::updatePosition);
 
         WorldRenderEvents.LAST.register((context) -> {
             int size = State.points.size();
@@ -66,24 +59,22 @@ public class Breadcrumbs implements ClientModInitializer {
 
             //? if <=1.20.6 {
             /*BufferBuilder buf = tessellator.getBuffer();
-            *///?} else {
-            BufferBuilder buf;
-            //?}
+            *///?}
 
             //$ set_shader
-            // >=1.21.5 placeholder
+            RenderSystem.setShader(ShaderProgramKeys.POSITION_COLOR);
 
             //? if <=1.21.4 {
-            /*if (settings.renderThroughWalls) {
+            if (settings.renderThroughWalls) {
                 RenderSystem.disableDepthTest();
             } else {
                 RenderSystem.enableDepthTest();
             }
             GL11.glDisable(GL11.GL_CULL_FACE);
             RenderSystem.enableBlend();
-            *///?}
+            //?}
 
-            State.trail.render(buf, matrix, cameraPos);
+            State.getTrail().render(tessellator, matrix, cameraPos);
 
             V.resetRendering();
         });

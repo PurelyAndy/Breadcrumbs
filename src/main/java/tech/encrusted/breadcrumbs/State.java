@@ -1,5 +1,6 @@
 package tech.encrusted.breadcrumbs;
 
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.text.Text;
@@ -16,9 +17,9 @@ public class State {
     private static boolean enabled = false;
     public static final List<Vector3d> positions = new ArrayList<>();
     public static List<Vector3d> points = new ArrayList<>();
-    public static Trail trail;
+    private static Trail trail;
 
-    public static void update(MinecraftClient client) {
+    public static void tick(MinecraftClient client) {
         while (Breadcrumbs.toggleKeyBind.wasPressed()) {
             enabled = !enabled;
             if (enabled) {
@@ -26,7 +27,9 @@ public class State {
             }
             client.player.sendMessage(Text.of("Recording: " + enabled), false);
         }
-
+    }
+    public static void updatePosition(WorldRenderContext unused) {
+        MinecraftClient client = MinecraftClient.getInstance();
         ClientPlayerEntity player = client.player;
         if (client.isPaused())
             return;
@@ -88,5 +91,16 @@ public class State {
             points = CatmullRomSpline.interpolate(positions, settings.interpolationSteps);
         else
             points = positions;
+    }
+
+    public static Trail getTrail() {
+        if (trail == null) {
+            trail = settings.trailMode.trail;
+        }
+        return trail;
+    }
+
+    public static void setTrail(Trail trail) {
+        State.trail = trail;
     }
 }

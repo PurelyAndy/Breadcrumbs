@@ -129,7 +129,11 @@ stonecutter {
     }
     replacements.string {
         direction = eval(mcVersion, "<=1.20.6")
-        replace("buf = V.begin(tessellator", "V.begin(buf")
+        replace("BufferBuilder buf = V.begin(tessellator", "V.begin(buf")
+    }
+    replacements.string {
+        direction = eval(mcVersion, "<=1.20.6")
+        replace("State.trail.render(tessellator", "State.trail.render(buf")
     }
 
     swaps["draw_mode"] = when {

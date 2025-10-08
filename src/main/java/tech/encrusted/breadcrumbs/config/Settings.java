@@ -22,11 +22,6 @@ public class Settings implements ConfigData {
     public int arrowFrequency = 5;
     public boolean removeLoops = false;
 
-    public void setTrailMode(TrailMode mode) {
-        this.trailMode = mode;
-        State.trail = mode.trail;
-    }
-
     public static ConfigSerializer.Factory<Settings> factory = (Config config, Class<Settings> clazz) -> new Toml4jConfigSerializer<>(config, clazz) {
         public Settings deserialize() {
             try {
