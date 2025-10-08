@@ -1,5 +1,5 @@
 plugins {
-	id("fabric-loom") version "1.10.5"
+	id("fabric-loom") version "1.11.8"
 	id("maven-publish")
 }
 
@@ -38,12 +38,16 @@ repositories {
 }
 
 loom {
-	splitEnvironmentSourceSets()
+    /*if (stonecutter.eval(mcVersion, ">=1.18.2")) {
+        splitEnvironmentSourceSets()
+    }*/
 
-	mods.create("breadcrumbs") {
-		sourceSet(sourceSets["main"])
-		sourceSet(sourceSets["client"])
-	}
+    /*if (stonecutter.eval(mcVersion, ">=1.18.2")) {
+        mods.create("breadcrumbs") {
+            sourceSet(sourceSets["main"])
+            sourceSet(sourceSets["client"])
+        }
+    }*/
 	runConfigs.all {
 		ideConfigGenerated(true)
 		runDir = "../../run"
@@ -59,12 +63,16 @@ dependencies {
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation("net.fabricmc.fabric-api:fabric-api:${deps["fabric_api"]}")
 
-	modImplementation("eu.pb4:placeholder-api:${deps["placeholder_api"]}")
-
 	modApi("me.shedaniel.cloth:cloth-config-fabric:${deps["cloth_config"]}") {
 		exclude(group = "net.fabricmc.fabric-api")
 	}
 	modApi("com.terraformersmc:modmenu:${deps["modmenu"]}")
+}
+
+configurations.all {
+    resolutionStrategy {
+        force("net.fabricmc:fabric-loader:${deps["fabric_loader"]}")
+    }
 }
 
 tasks.processResources {
@@ -73,10 +81,10 @@ tasks.processResources {
 	inputs.property("version", mod.version)
 	inputs.property("mcdep", mcDep)
 	inputs.property("javaver", java.sourceCompatibility.toString())
-	inputs.property("fabricapiver", deps["fabric_api"])
+    inputs.property("fabricapiver", deps["fabric_api"])
+    inputs.property("fabricapidepname", if (stonecutter.eval(mcVersion, "<=1.16.5")) "fabric" else "fabric-api")
 	inputs.property("modmenuver", deps["modmenu"])
 	inputs.property("clothconfigver", deps["cloth_config"])
-	inputs.property("placeholderapiver", deps["placeholder_api"])
 
 	val map = mapOf(
 		"id" to mod.id,
@@ -85,9 +93,9 @@ tasks.processResources {
 		"mcdep" to mcDep,
 		"javaver" to java.sourceCompatibility.toString(),
 		"fabricapiver" to deps["fabric_api"],
+        "fabricapidepname" to if (stonecutter.eval(mcVersion, "<=1.16.5")) "fabric" else "fabric-api",
 		"modmenuver" to deps["modmenu"],
-		"clothconfigver" to deps["cloth_config"],
-		"placeholderapiver" to deps["placeholder_api"],
+		"clothconfigver" to deps["cloth_config"]
 	)
 
 	filesMatching("fabric.mod.json") { expand(map) }

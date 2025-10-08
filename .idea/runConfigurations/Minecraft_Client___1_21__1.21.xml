@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" factoryName="Application" name="Minecraft Client (:1.21)" type="Application">
     <option name="MAIN_CLASS_NAME" value="net.fabricmc.devlaunchinjector.Main"/>
-    <module name="Breadcrumbs.1.21.client"/>
+    <module name="Breadcrumbs.1.21.main"/>
     <option name="PROGRAM_PARAMETERS" value=""/>
     <option name="VM_PARAMETERS" value="-Dfabric.dli.config=R:\repos\Breadcrumbs\versions\1.21\.gradle\loom-cache\launch.cfg -Dfabric.dli.env=client -Dfabric.dli.main=net.fabricmc.loader.impl.launch.knot.KnotClient"/>
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/versions\1.21/../../run/"/>
