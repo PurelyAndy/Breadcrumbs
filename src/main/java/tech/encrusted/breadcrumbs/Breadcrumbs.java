@@ -18,10 +18,10 @@ import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFW;
 
 //? if <=1.21.4 {
-import org.lwjgl.opengl.GL11;
+/*import org.lwjgl.opengl.GL11;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gl.ShaderProgramKeys;
-//?}
+*///?}
 //? if >=1.21.9 {
 /*import net.minecraft.util.Identifier;*/
 //?}
@@ -62,17 +62,17 @@ public class Breadcrumbs implements ClientModInitializer {
             *///?}
 
             //$ set_shader
-            RenderSystem.setShader(ShaderProgramKeys.POSITION_COLOR);
+            // >=1.21.5 placeholder
 
             //? if <=1.21.4 {
-            if (settings.renderThroughWalls) {
+            /*if (settings.renderThroughWalls) {
                 RenderSystem.disableDepthTest();
             } else {
                 RenderSystem.enableDepthTest();
             }
             GL11.glDisable(GL11.GL_CULL_FACE);
             RenderSystem.enableBlend();
-            //?}
+            *///?}
 
             State.getTrail().render(tessellator, matrix, cameraPos);
 

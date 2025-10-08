@@ -1,7 +1,7 @@
 package tech.encrusted.breadcrumbs;
 
 //? if >=1.21.5 {
-/*import com.mojang.blaze3d.pipeline.BlendFunction;
+import com.mojang.blaze3d.pipeline.BlendFunction;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.platform.DepthTestFunction;
 import com.mojang.blaze3d.vertex.VertexFormat;
@@ -9,14 +9,14 @@ import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.RenderPhase;
 import net.minecraft.client.render.VertexFormats;
-*///?}
+//?}
 
 import java.util.OptionalDouble;
 
 public class RenderHelper {
     //? if >=1.21.5 {
 
-    /*public static final RenderPipeline DEBUG_LINES = RenderPipelines.register(
+    public static final RenderPipeline DEBUG_LINES = RenderPipelines.register(
             RenderPipeline.builder(RenderPipelines.POSITION_COLOR_SNIPPET)
                     .withLocation("pipeline/debug_lines")
                     .withVertexFormat(VertexFormats.POSITION_COLOR, VertexFormat.DrawMode.DEBUG_LINES)
@@ -120,5 +120,5 @@ public class RenderHelper {
     );
 
 
-    *///?}
+    //?}
 }

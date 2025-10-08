@@ -18,12 +18,12 @@ import org.joml.Matrix4f;
 /*import org.lwjgl.opengl.GL11;
 *///?}
 //? if <=1.21.4 {
-import net.minecraft.client.render.VertexFormat;
+/*import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.BufferRenderer;
 import org.lwjgl.opengl.GL11;
-//?} else {
-/*import com.mojang.blaze3d.vertex.VertexFormat;
-*///?}
+*///?} else {
+import com.mojang.blaze3d.vertex.VertexFormat;
+//?}
 
 //? if <=1.18.2 {
 /*import net.minecraft.text.TranslatableText;*/
@@ -104,9 +104,9 @@ public class V {
                  *///?} else if <=1.20.6 {
                 /*.getLerpedPos(MinecraftClient.getInstance().getTickDelta())
                  *///?} else if <=1.21.4 {
-                .getLerpedPos(MinecraftClient.getInstance().getRenderTickCounter().getTickDelta(false))
-                 //?} else
-                /*.getLerpedPos(MinecraftClient.getInstance().getRenderTickCounter().getTickProgress(false))*/
+                /*.getLerpedPos(MinecraftClient.getInstance().getRenderTickCounter().getTickDelta(false))
+                 *///?} else
+                .getLerpedPos(MinecraftClient.getInstance().getRenderTickCounter().getTickProgress(false))
                 ;
     }
 
@@ -123,10 +123,10 @@ public class V {
         /*RenderSystem.enableTexture();*/
         //?}
         //? if <=1.21.4 {
-        RenderSystem.disableBlend();
+        /*RenderSystem.disableBlend();
         GL11.glEnable(GL11.GL_CULL_FACE);
         RenderSystem.enableDepthTest();
-        //?}
+        *///?}
     }
 
     public static
@@ -161,10 +161,10 @@ public class V {
         *///?} else if <=1.19.2 {
         /*BufferRenderer.drawWithShader(buffer);*/
         //?} else if <=1.21.4 {
-        BufferRenderer.drawWithGlobalProgram(buffer);
-        //?} else {
-        /*throw new RuntimeException("Andy is a moron. Report this on GitHub. https://github.com/PurelyAndy/Breadcrumbs/issues/new");
-        *///?}
+        /*BufferRenderer.drawWithGlobalProgram(buffer);
+        *///?} else {
+        throw new RuntimeException("Andy is a moron. Report this on GitHub. https://github.com/PurelyAndy/Breadcrumbs/issues/new");
+        //?}
     }
 
     public static MutableText translatableText(String key) {

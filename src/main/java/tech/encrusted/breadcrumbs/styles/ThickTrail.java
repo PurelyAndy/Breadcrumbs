@@ -63,14 +63,14 @@ public class ThickTrail extends Trail {
         if (State.points.size() > 1) {
             var buffer = V.endBuffer(buf);
             //? if <=1.21.4 {
-            V.draw(buffer);
-            //?} else {
-            /*if (settings.renderThroughWalls) {
+            /*V.draw(buffer);
+            *///?} else {
+            if (settings.renderThroughWalls) {
                 RenderHelper.triangleStripNoDepth.draw(buffer);
             } else {
                 RenderHelper.triangleStrip.draw(buffer);
             }
-            *///?}
+            //?}
         }
         //? if <=1.18.2 {
         /*else {
