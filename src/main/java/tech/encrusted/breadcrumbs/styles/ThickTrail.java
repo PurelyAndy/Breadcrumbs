@@ -4,6 +4,7 @@ import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Matrix4f;
 import org.joml.Vector3d;
+import tech.encrusted.breadcrumbs.RenderHelper;
 import tech.encrusted.breadcrumbs.State;
 import tech.encrusted.breadcrumbs.V;
 
@@ -63,20 +64,20 @@ public class ThickTrail extends Trail {
 
         if (State.points.size() > 1) {
             //? if <=1.21.4 {
-            V.draw(buffer);
-            //?} else {
-            /*if (settings.renderThroughWalls) {
+            /*V.draw(buffer);
+            *///?} else {
+            if (settings.renderThroughWalls) {
                 RenderHelper.triangleStripNoDepth.draw(buffer);
             } else {
                 RenderHelper.triangleStrip.draw(buffer);
             }
-            *///?}
+            //?}
         }
         //? if <=1.18.2 {
-        else {
+        /*else {
             buf.popData();
         }
-        //?}
+        *///?}
     }
 
     @Override

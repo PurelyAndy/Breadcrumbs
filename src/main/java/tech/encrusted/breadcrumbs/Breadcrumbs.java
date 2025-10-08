@@ -28,8 +28,8 @@ import java.awt.*;
 /*import net.minecraft.client.gl.ShaderProgramKeys;
 *///?}
 //? if <=1.21.4 {
-import org.lwjgl.opengl.GL11;
-//?}
+/*import org.lwjgl.opengl.GL11;
+*///?}
 //? if >=1.21.9 {
 /*import net.minecraft.util.Identifier;*/
 //?}
@@ -65,23 +65,23 @@ public class Breadcrumbs implements ClientModInitializer {
             Matrix4f matrix = V.positionMatrix(context);
 
             //? if <=1.20.6 {
-            BufferBuilder buf = tessellator.getBuffer();
-            //?} else {
-            /*BufferBuilder buf;
-            *///?}
+            /*BufferBuilder buf = tessellator.getBuffer();
+            *///?} else {
+            BufferBuilder buf;
+            //?}
 
             //$ set_shader
-            RenderSystem.setShader(GameRenderer::getPositionColorShader);
+            // >=1.21.5 placeholder
 
             //? if <=1.21.4 {
-            if (settings.renderThroughWalls) {
+            /*if (settings.renderThroughWalls) {
                 RenderSystem.disableDepthTest();
             } else {
                 RenderSystem.enableDepthTest();
             }
             GL11.glDisable(GL11.GL_CULL_FACE);
             RenderSystem.enableBlend();
-            //?}
+            *///?}
 
             State.trail.render(buf, matrix, cameraPos);
 

@@ -19,14 +19,14 @@ import org.joml.Matrix4f;
 /*import org.lwjgl.opengl.GL11;
 *///?}
 //? if <=1.21.4 {
-import net.minecraft.client.render.VertexFormat;
+/*import net.minecraft.client.render.VertexFormat;
 import org.lwjgl.opengl.GL11;
-//?} else {
-/*import com.mojang.blaze3d.vertex.VertexFormat;
-*///?}
+*///?} else {
+import com.mojang.blaze3d.vertex.VertexFormat;
+//?}
 
 //? if >1.18.2 {
-/*import net.minecraft.client.render.BuiltBuffer;*/
+import net.minecraft.client.render.BuiltBuffer;
 //?}
 
 public class V {
@@ -51,36 +51,36 @@ public class V {
     }
     public static
     //? if <=1.20.6 {
-    void
-    //?} else {
-    /*net.minecraft.client.render.BufferBuilder
-    *///?}
+    /*void
+    *///?} else {
+    net.minecraft.client.render.BufferBuilder
+    //?}
     begin(
     //? if <=1.20.6 {
-    net.minecraft.client.render.BufferBuilder
-    //?} else {
-    /*net.minecraft.client.render.Tessellator
-    *///?}
+    /*net.minecraft.client.render.BufferBuilder
+    *///?} else {
+    net.minecraft.client.render.Tessellator
+    //?}
     obj,
     DrawMode mode,
     VertexFormat format
     ) {
         //? if >=1.21 {
-        /*return
-        *///?}
+        return
+        //?}
         obj.begin(mode.mode, format);
     }
 
     public static void vertex(BufferBuilder buf, Matrix4f matrix, Vector3d pos1, Vec3d cameraPos, float[] color) {
         //? if <=1.19.2 {
-        net.minecraft.util.math.Matrix4f identity = new net.minecraft.util.math.Matrix4f();
+        /*net.minecraft.util.math.Matrix4f identity = new net.minecraft.util.math.Matrix4f();
         identity.loadIdentity();
-        //?}
+        *///?}
         buf.vertex(
             //? if <=1.19.2 {
-            identity,
-            //?} else {
-            /*matrix,*/
+            /*identity,
+            *///?} else {
+            matrix,
             //?}
             (float) (pos1.x - cameraPos.x),
             (float) (pos1.y - cameraPos.y),
@@ -91,7 +91,7 @@ public class V {
             color[1], color[2], Breadcrumbs.settings.trailOpacity
         )
         //? if <=1.20.6
-        .next()
+        /*.next()*/
         ;
     }
 
@@ -100,19 +100,19 @@ public class V {
                 //? if <=1.16.5 {
                 /*.method_30950(MinecraftClient.getInstance().getTickDelta())
                  *///?} else if <=1.20.6 {
-                .getLerpedPos(MinecraftClient.getInstance().getTickDelta())
-                 //?} else if <=1.21.4 {
+                /*.getLerpedPos(MinecraftClient.getInstance().getTickDelta())
+                 *///?} else if <=1.21.4 {
                 /*.getLerpedPos(MinecraftClient.getInstance().getRenderTickCounter().getTickDelta(false))
                  *///?} else
-                /*.getLerpedPos(MinecraftClient.getInstance().getRenderTickCounter().getTickProgress(false))*/
+                .getLerpedPos(MinecraftClient.getInstance().getRenderTickCounter().getTickProgress(false))
                 ;
     }
 
     public static Matrix4f positionMatrix(WorldRenderContext context) {
         //? if <=1.19.2 {
-        return null;
-        //?} else {
-        /*return context.matrixStack().peek().getPositionMatrix();*/
+        /*return null;
+        *///?} else {
+        return context.matrixStack().peek().getPositionMatrix();
         //?}
     }
 
@@ -121,55 +121,55 @@ public class V {
         /*RenderSystem.enableTexture();*/
         //?}
         //? if <=1.21.4 {
-        RenderSystem.disableBlend();
+        /*RenderSystem.disableBlend();
         GL11.glEnable(GL11.GL_CULL_FACE);
         RenderSystem.enableDepthTest();
-        //?}
+        *///?}
     }
 
     public static
     //? if <=1.18.2 {
-    BufferBuilder
-    //?} else if <=1.20.6 {
+    /*BufferBuilder
+    *///?} else if <=1.20.6 {
     /*BufferBuilder.BuiltBuffer*/
     //?} else {
-    /*BuiltBuffer
-    *///?}
+    BuiltBuffer
+    //?}
     endBuffer(BufferBuilder buf) {
         //? if <=1.18.2 {
-        buf.end();
+        /*buf.end();
         return buf;
-        //?} else {
-        /*return buf.end();
-        *///?}
+        *///?} else {
+        return buf.end();
+        //?}
     }
 
     public static void draw(
     //? if <=1.18.2 {
-    BufferBuilder
-    //?} else if <=1.20.6 {
+    /*BufferBuilder
+    *///?} else if <=1.20.6 {
     /*BufferBuilder.BuiltBuffer*/
     //?} else {
-    /*BuiltBuffer
-    *///?}
+    BuiltBuffer
+    //?}
     buffer
     ) {
         //? if <=1.18.2 {
-        BufferRenderer.draw(buffer);
-        //?} else if <=1.19.2 {
+        /*BufferRenderer.draw(buffer);
+        *///?} else if <=1.19.2 {
         /*BufferRenderer.drawWithShader(buffer);*/
         //?} else if <=1.21.4 {
         /*BufferRenderer.drawWithGlobalProgram(buffer);
         *///?} else {
-        /*you stupid idiot you broke stonecutter somehow*/
+        you stupid idiot you broke stonecutter somehow
         //?}
     }
 
     public static MutableText translatableText(String key) {
         //? if <=1.18.2 {
-        return new TranslatableText(key);
-        //?} else {
-        /*return Text.translatable(key);
-         *///?}
+        /*return new TranslatableText(key);
+        *///?} else {
+        return Text.translatable(key);
+         //?}
     }
 }

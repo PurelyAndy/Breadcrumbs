@@ -23,9 +23,9 @@
  */
 
 //? if <=1.19.2 {
-package org.joml;
+/*package org.joml;
 
-/**
+/^*
  * Contains fast approximations of some {@link java.lang.Math} operations.
  * <p>
  * By default, {@link java.lang.Math} methods will be used by all other JOML classes. In order to use the approximations in this class, start the JVM with the parameter <code>-Djoml.fastmath</code>.
@@ -40,16 +40,16 @@ package org.joml;
  * for improved accuracy via <code>-Djoml.sinLookup.bits=&lt;n&gt;</code>, where &lt;n&gt; is the number of bits of the lookup table.
  * 
  * @author Kai Burjack
- */
+ ^/
 public class Math {
 
-    /*
+    /^
      * The following implementation of an approximation of sine and cosine was
      * thankfully donated by Riven from http://java-gaming.org/.
      * 
      * The code for linear interpolation was gratefully donated by theagentd
      * from the same site.
-     */
+     ^/
     public static final double PI = java.lang.Math.PI;
     public static final double PI_TIMES_2 = PI * 2.0;
     public static final float PI_f = (float) java.lang.Math.PI;
@@ -69,9 +69,9 @@ public class Math {
     private static final double c6 = Double.longBitsToDouble(4460272573143870633L);
     private static final double c7 = Double.longBitsToDouble(-4797767418267846529L);
 
-    /**
+    /^*
      * @author theagentd
-     */
+     ^/
     static double sin_theagentd_arith(double x){
         double xi = floor((x + PI_OVER_4) * ONE_OVER_PI);
         double x_ = x - xi * PI;
@@ -89,9 +89,9 @@ public class Math {
         return sign * sin;
     }
 
-    /**
+    /^*
      * Reference: <a href="http://www.java-gaming.org/topics/joml-1-8-0-release/37491/msg/361718/view.html#msg361718">http://www.java-gaming.org/</a>
-     */
+     ^/
     static double sin_roquen_arith(double x) {
         double xi = Math.floor((x + PI_OVER_4) * ONE_OVER_PI);
         double x_ = x - xi * PI;
@@ -128,9 +128,9 @@ public class Math {
     private static final double s2 = Double.longBitsToDouble(-4628199223918090387L);
     private static final double s1 = Double.longBitsToDouble(4607182418589157889L);
 
-    /**
+    /^*
      * Reference: <a href="http://www.java-gaming.org/topics/joml-1-8-0-release/37491/msg/361815/view.html#msg361815">http://www.java-gaming.org/</a>
-     */
+     ^/
     static double sin_roquen_9(double v) {
       double i  = java.lang.Math.rint(v* ONE_OVER_PI);
       double x  = v - i * Math.PI;
@@ -154,9 +154,9 @@ public class Math {
     private static final double k6 = Double.longBitsToDouble(4460268259291226124L);
     private static final double k7 = Double.longBitsToDouble(-4798040743777455072L);
 
-    /**
+    /^*
      * Reference: <a href="http://www.java-gaming.org/topics/joml-1-8-0-release/37491/msg/361815/view.html#msg361815">http://www.java-gaming.org/</a>
-     */
+     ^/
     static double sin_roquen_newk(double v) {
       double i  = java.lang.Math.rint(v* ONE_OVER_PI);
       double x  = v - i * Math.PI;
@@ -214,7 +214,7 @@ public class Math {
         return cos;
     }
 
-    /* Other math functions not yet approximated */
+    /^ Other math functions not yet approximated ^/
 
     public static float sqrt(float r) {
         return (float) java.lang.Math.sqrt(r);
@@ -261,9 +261,9 @@ public class Math {
             return acos(v);
     }
 
-    /**
+    /^*
      * https://math.stackexchange.com/questions/1098487/atan2-faster-approximation/1105038#answer-1105038
-     */
+     ^/
     private static double fastAtan2(double y, double x) {
         double ax = x >= 0.0 ? x : -x, ay = y >= 0.0 ? y : -y;
         double a = ay > ax ? ax / ay : ay / ax;
@@ -571,4 +571,4 @@ public class Math {
         return r;
     }
 }
-//?}
+*///?}

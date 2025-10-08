@@ -23,7 +23,7 @@
  */
 
 //? if <=1.19.2 {
-package org.joml;
+/*package org.joml;
 
 import java.io.Externalizable;
 import java.io.IOException;
@@ -34,7 +34,7 @@ import java.nio.FloatBuffer;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
-/**
+/^*
  * Contains the definition of a 3x3 matrix of floats, and associated functions to transform
  * it. The matrix is column-major to match OpenGL's interpretation, and it looks like this:
  * <p>
@@ -44,7 +44,7 @@ import java.text.NumberFormat;
  * 
  * @author Richard Greenlees
  * @author Kai Burjack
- */
+ ^/
 public class Matrix3f implements Externalizable, Cloneable, Matrix3fc {
 
     private static final long serialVersionUID = 1L;
@@ -53,7 +53,7 @@ public class Matrix3f implements Externalizable, Cloneable, Matrix3fc {
     public float m10, m11, m12;
     public float m20, m21, m22;
 
-    /**
+    /^*
      * Create a new 3x3 matrix using the supplied float values. The order of the parameter is column-major, 
      * so the first three parameters specify the three elements of the first column.
      * 
@@ -75,7 +75,7 @@ public class Matrix3f implements Externalizable, Cloneable, Matrix3fc {
      *          the value of m21
      * @param m22
      *          the value of m22
-     */
+     ^/
     public Matrix3f(float m00, float m01, float m02,
                     float m10, float m11, float m12, 
                     float m20, float m21, float m22) {
@@ -90,9 +90,9 @@ public class Matrix3f implements Externalizable, Cloneable, Matrix3fc {
         this.m22 = m22;
     }
 
-    /**
+    /^*
      * Create a new {@link Matrix3f} and set it to identity.
-     */
+     ^/
     public Matrix3f() {
         m00 = 1.0f;
         m11 = 1.0f;
@@ -209,4 +209,4 @@ public class Matrix3f implements Externalizable, Cloneable, Matrix3fc {
     }
 }
 
-//?}
+*///?}

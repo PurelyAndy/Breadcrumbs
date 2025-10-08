@@ -64,9 +64,9 @@ public class LinesTrail extends Trail {
 
         if (State.points.size() > 1) {
             //? if <=1.21.4 {
-            V.draw(buffer);
-            //?} else {
-            /*if (arrows) {
+            /*V.draw(buffer);
+            *///?} else {
+            if (arrows) {
                 if (settings.renderThroughWalls) {
                     RenderHelper.debugLinesNoDepth.draw(buffer);
                 } else {
@@ -79,13 +79,13 @@ public class LinesTrail extends Trail {
                     RenderHelper.debugLineStrip.draw(buffer);
                 }
             }
-            *///?}
+            //?}
         }
         //? if <=1.18.2 {
-        else {
+        /*else {
             buf.popData();
         }
-        //?}
+        *///?}
     }
 
     @Override

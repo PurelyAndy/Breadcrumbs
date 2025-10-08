@@ -13,7 +13,7 @@ import static tech.encrusted.breadcrumbs.Breadcrumbs.settings;
 
 public abstract class Trail {
     public void render(BufferBuilder buf, Matrix4f matrix, Vec3d cameraPos) {
-        V.begin(buf, getDrawMode(), VertexFormats.POSITION_COLOR);
+        buf = V.begin(tessellator, getDrawMode(), VertexFormats.POSITION_COLOR);
         build(buf, matrix, cameraPos);
         draw(buf);
     }
