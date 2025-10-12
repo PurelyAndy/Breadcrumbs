@@ -26,8 +26,8 @@ import com.mojang.blaze3d.vertex.VertexFormat;
 //?}
 
 //? if <=1.18.2 {
-/*import net.minecraft.text.TranslatableText;*/
-//?} else {
+/*import net.minecraft.text.TranslatableText;
+*///?} else if >1.20.6 {
 import net.minecraft.client.render.BuiltBuffer;
 //?}
 
@@ -120,8 +120,8 @@ public class V {
 
     public static void resetRendering() {
         //? if <=1.16.5 {
-        /*RenderSystem.enableTexture();*/
-        //?}
+        /*RenderSystem.enableTexture();
+        *///?}
         //? if <=1.21.4 {
         /*RenderSystem.disableBlend();
         GL11.glEnable(GL11.GL_CULL_FACE);
@@ -133,8 +133,8 @@ public class V {
     //? if <=1.18.2 {
     /*BufferBuilder
     *///?} else if <=1.20.6 {
-    /*BufferBuilder.BuiltBuffer*/
-    //?} else {
+    /*BufferBuilder.BuiltBuffer
+    *///?} else {
     BuiltBuffer
     //?}
     endBuffer(BufferBuilder buf) {
@@ -150,8 +150,8 @@ public class V {
     //? if <=1.18.2 {
     /*BufferBuilder
     *///?} else if <=1.20.6 {
-    /*BufferBuilder.BuiltBuffer*/
-    //?} else {
+    /*BufferBuilder.BuiltBuffer
+    *///?} else {
     BuiltBuffer
     //?}
     buffer
@@ -159,8 +159,8 @@ public class V {
         //? if <=1.18.2 {
         /*BufferRenderer.draw(buffer);
         *///?} else if <=1.19.2 {
-        /*BufferRenderer.drawWithShader(buffer);*/
-        //?} else if <=1.21.4 {
+        /*BufferRenderer.drawWithShader(buffer);
+        *///?} else if <=1.21.4 {
         /*BufferRenderer.drawWithGlobalProgram(buffer);
         *///?} else {
         throw new RuntimeException("Andy is a moron. Report this on GitHub. https://github.com/PurelyAndy/Breadcrumbs/issues/new");

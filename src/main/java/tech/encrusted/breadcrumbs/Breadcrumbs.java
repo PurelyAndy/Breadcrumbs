@@ -20,8 +20,12 @@ import org.lwjgl.glfw.GLFW;
 //? if <=1.21.4 {
 /*import org.lwjgl.opengl.GL11;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gl.ShaderProgramKeys;
 *///?}
+
+//? if <=1.21.4 && >1.21.1 {
+/*import net.minecraft.client.gl.ShaderProgramKeys;
+*///?}
+
 //? if >=1.21.9 {
 /*import net.minecraft.util.Identifier;*/
 //?}
@@ -78,9 +82,5 @@ public class Breadcrumbs implements ClientModInitializer {
 
             V.resetRendering();
         });
-    }
-
-    private static void drawThickTrail(int size, BufferBuilder buf, Matrix4f matrix, Vec3d cameraPos) {
-
     }
 }

@@ -10,23 +10,25 @@ import tech.encrusted.breadcrumbs.RenderHelper;
 import tech.encrusted.breadcrumbs.State;
 import tech.encrusted.breadcrumbs.V;
 
+import java.util.List;
+
 import static tech.encrusted.breadcrumbs.Breadcrumbs.settings;
 
 public class LinesTrail extends Trail {
     @Override
-    public void build(BufferBuilder buf, Matrix4f matrix, Vec3d cameraPos) {
-        int size = State.points.size();
+    public void build(BufferBuilder buf, Matrix4f matrix, Vec3d cameraPos, List<Vector3d> points) {
+        int size = points.size();
 
         for (int i = 0; i < size - (settings.renderArrows ? 1 : 0); i++) {
             float[] color = getColor(i, size);
 
-            Vector3d pos1 = State.points.get(i);
+            Vector3d pos1 = points.get(i);
 
             // The first point of the segment
             V.vertex(buf, matrix, pos1, cameraPos, color);
             if (settings.renderArrows) {
                 // We have to draw the second point of the segment since this isn't a line strip
-                Vector3d pos2 = State.points.get(i + 1);
+                Vector3d pos2 = points.get(i + 1);
                 V.vertex(buf, matrix, pos2, cameraPos, color);
 
                 if (i == size - 2 ||
@@ -61,31 +63,24 @@ public class LinesTrail extends Trail {
 
     @Override
     public void draw(BufferBuilder buf) {
-        if (State.points.size() > 1) {
-            var buffer = V.endBuffer(buf);
-            //? if <=1.21.4 {
-            /*V.draw(buffer);
-            *///?} else {
-            if (settings.renderArrows) {
-                if (settings.renderThroughWalls) {
-                    RenderHelper.debugLinesNoDepth.draw(buffer);
-                } else {
-                    RenderHelper.debugLines.draw(buffer);
-                }
+        var buffer = V.endBuffer(buf);
+        //? if <=1.21.4 {
+        /*V.draw(buffer);
+        *///?} else {
+        if (settings.renderArrows) {
+            if (settings.renderThroughWalls) {
+                RenderHelper.debugLinesNoDepth.draw(buffer);
             } else {
-                if (settings.renderThroughWalls) {
-                    RenderHelper.debugLineStripNoDepth.draw(buffer);
-                } else {
-                    RenderHelper.debugLineStrip.draw(buffer);
-                }
+                RenderHelper.debugLines.draw(buffer);
             }
-            //?}
+        } else {
+            if (settings.renderThroughWalls) {
+                RenderHelper.debugLineStripNoDepth.draw(buffer);
+            } else {
+                RenderHelper.debugLineStrip.draw(buffer);
+            }
         }
-        //? if <=1.18.2 {
-        /*else {
-            buf.popData();
-        }
-        *///?}
+        //?}
     }
 
     @Override

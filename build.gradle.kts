@@ -133,7 +133,7 @@ stonecutter {
     }
     replacements.string {
         direction = eval(mcVersion, "<=1.20.6")
-        replace("State.trail.render(tessellator", "State.trail.render(buf")
+        replace("State.getTrail().render(tessellator", "State.getTrail().render(buf")
     }
 
     swaps["draw_mode"] = when {

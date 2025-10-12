@@ -8,29 +8,31 @@ import tech.encrusted.breadcrumbs.RenderHelper;
 import tech.encrusted.breadcrumbs.State;
 import tech.encrusted.breadcrumbs.V;
 
+import java.util.List;
+
 import static tech.encrusted.breadcrumbs.Breadcrumbs.settings;
 
 public class ThickTrail extends Trail {
     @Override
-    public void build(final BufferBuilder buf, final Matrix4f matrix, final Vec3d cameraPos) {
-        final int size = State.points.size();
+    public void build(BufferBuilder buf, Matrix4f matrix, Vec3d cameraPos, List<Vector3d> points) {
+        int size = points.size();
 
         double oldAngle = 0;
         boolean swapped = false;
 
         for (int i = 0; i < size - 1; i++) {
-            final float[] color = getColor(i, size);
+            float[] color = getColor(i, size);
 
-            Vector3d pos1 = State.points.get(i);
-            Vector3d pos2 = equalify(pos1, State.points.get(i + 1));
+            Vector3d pos1 = points.get(i);
+            Vector3d pos2 = equalify(pos1, points.get(i + 1));
 
-            final double angle = Math.atan2(pos2.x - pos1.x, pos2.z - pos1.z);
-            final double a0 = angle + Math.PI / 2;
-            final double a1 = angle - Math.PI / 2;
+            double angle = Math.atan2(pos2.x - pos1.x, pos2.z - pos1.z);
+            double a0 = angle + Math.PI / 2;
+            double a1 = angle - Math.PI / 2;
 
             // An arrow frequency of 1 with no interpolation would result in no arrows at all
-            final int arrowFrequency = settings.arrowFrequency * (settings.smoothInterpolation ? settings.interpolationSteps : 1);
-            final float thickness = getSegmentThickness(i, arrowFrequency);
+            int arrowFrequency = settings.arrowFrequency * (settings.smoothInterpolation ? settings.interpolationSteps : 1);
+            float thickness = getSegmentThickness(i, arrowFrequency);
             Vector3d p1 = new Vector3d((float) Math.sin(a0), 0, (float) Math.cos(a0)).mul(thickness).add(pos2);
             Vector3d p2 = new Vector3d((float) Math.sin(a1), 0, (float) Math.cos(a1)).mul(thickness).add(pos2);
 
@@ -60,23 +62,16 @@ public class ThickTrail extends Trail {
 
     @Override
     public void draw(BufferBuilder buf) {
-        if (State.points.size() > 1) {
-            var buffer = V.endBuffer(buf);
-            //? if <=1.21.4 {
-            /*V.draw(buffer);
-            *///?} else {
-            if (settings.renderThroughWalls) {
-                RenderHelper.triangleStripNoDepth.draw(buffer);
-            } else {
-                RenderHelper.triangleStrip.draw(buffer);
-            }
-            //?}
+        var buffer = V.endBuffer(buf);
+        //? if <=1.21.4 {
+        /*V.draw(buffer);
+        *///?} else {
+        if (settings.renderThroughWalls) {
+            RenderHelper.triangleStripNoDepth.draw(buffer);
+        } else {
+            RenderHelper.triangleStrip.draw(buffer);
         }
-        //? if <=1.18.2 {
-        /*else {
-            buf.popData();
-        }
-        *///?}
+        //?}
     }
 
     @Override

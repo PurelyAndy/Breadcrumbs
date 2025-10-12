@@ -2,15 +2,11 @@
   <configuration default="false" factoryName="Application" name="Minecraft Client (:1.20.6)" type="Application">
     <option name="MAIN_CLASS_NAME" value="net.fabricmc.devlaunchinjector.Main"/>
     <module name="Breadcrumbs.1.20.6.main"/>
-    <option name="PROGRAM_PARAMETERS" value=""/>
-    <option name="VM_PARAMETERS" value="-Dfabric.dli.config=/home/me/repos/Breadcrumbs/versions/1.20.6/.gradle/loom-cache/launch.cfg -Dfabric.dli.env=client -Dfabric.dli.main=net.fabricmc.loader.impl.launch.knot.KnotClient"/>
+    <shortenClasspath name="ARGS_FILE"/>
+    <option name="VM_PARAMETERS" value="-Dfabric.dli.config=$PROJECT_DIR$/versions/1.20.6/.gradle/loom-cache/launch.cfg -Dfabric.dli.env=client -Dfabric.dli.main=net.fabricmc.loader.impl.launch.knot.KnotClient"/>
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/versions/1.20.6/../../run/"/>
     <method v="2">
       <option enabled="true" name="Make"/>
     </method>
-    <envs>
-      
-    </envs>
-    <shortenClasspath name="ARGS_FILE"/>
   <classpathModifications/></configuration>
 </component>
