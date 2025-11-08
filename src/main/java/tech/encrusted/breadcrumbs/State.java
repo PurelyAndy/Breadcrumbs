@@ -1,6 +1,6 @@
 package tech.encrusted.breadcrumbs;
 
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
+import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.text.Text;
@@ -12,6 +12,13 @@ import tech.encrusted.breadcrumbs.styles.Trail;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+
+//? if >=1.21.9 {
+import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
+//?} else {
+/*import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
+ *///?}
 
 import static tech.encrusted.breadcrumbs.Breadcrumbs.settings;
 

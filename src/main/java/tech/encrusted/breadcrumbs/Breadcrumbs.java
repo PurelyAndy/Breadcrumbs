@@ -9,7 +9,7 @@ import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
+
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.InputUtil;
@@ -27,8 +27,11 @@ import com.mojang.blaze3d.systems.RenderSystem;
 *///?}
 
 //? if >=1.21.9 {
-/*import net.minecraft.util.Identifier;*/
-//?}
+import net.minecraft.util.Identifier;
+import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
+//?} else {
+/*import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
+*///?}
 
 public class Breadcrumbs implements ClientModInitializer {
     public static final KeyBinding toggleKeyBind = KeyBindingHelper.registerKeyBinding(
@@ -36,10 +39,10 @@ public class Breadcrumbs implements ClientModInitializer {
                     "key.breadcrumbs.toggle",
                     InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_RIGHT_BRACKET,
                     //? if <=1.21.8 {
-                    "key.breadcrumbs.category"
-                    //?} else {
-                    /*new KeyBinding.Category(Identifier.of("breadcrumbs", "key.breadcrumbs.category"))
-                    *///?}
+                    /*"key.breadcrumbs.category"
+                    *///?} else {
+                    new KeyBinding.Category(Identifier.of("breadcrumbs", "key.breadcrumbs.category"))
+                    //?}
             )
     );
     public static Settings settings;
@@ -50,9 +53,10 @@ public class Breadcrumbs implements ClientModInitializer {
         Breadcrumbs.settings = AutoConfig.getConfigHolder(Settings.class).getConfig();
 
         ClientTickEvents.END_CLIENT_TICK.register(State::tick);
-        WorldRenderEvents.LAST.register(State::updatePosition);
 
-        WorldRenderEvents.LAST.register((context) -> {
+        WorldRenderEvents.END_MAIN.register(State::updatePosition);
+
+        WorldRenderEvents.END_MAIN.register((context) -> {
             int size = State.points.size();
             if (size == 0)
                 return;

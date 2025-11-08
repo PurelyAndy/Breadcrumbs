@@ -135,6 +135,10 @@ stonecutter {
         direction = eval(mcVersion, "<=1.20.6")
         replace("State.getTrail().render(tessellator", "State.getTrail().render(buf")
     }
+    replacements.string {
+        direction = eval(mcVersion, "<=1.21.8")
+        replace("WorldRenderEvents.END_MAIN", "WorldRenderEvents.LAST")
+    }
 
     swaps["draw_mode"] = when {
         eval(mcVersion, "<=1.16.5") -> "int"
